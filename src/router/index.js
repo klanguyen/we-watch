@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import DashBoard from '../views/DashBoard.vue'
 import Home from '../views/Home.vue'
+import CreateList from "@/views/movie-lists/CreateList.vue";
+import UserAuth from "@/views/auth/UserAuth.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,6 +19,11 @@ const router = createRouter({
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/DashBoard.vue')
+    },
+    { path: '/auth', component: UserAuth },
+    {
+      path: '/new-list',
+      component: CreateList
     }
   ]
 })
