@@ -81,6 +81,7 @@ export default {
         } else {
           await this.$store.dispatch('signup', actionPayload);
         }
+        this.$router.replace('/dashboard');
       } catch(err) {
         this.error = err.message || 'Failed to authenticate, try later';
       }
