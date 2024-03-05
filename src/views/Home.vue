@@ -5,7 +5,9 @@ name: "Home"
 </script>
 
 <template>
-  Home Page
+  <div>
+    <h1>Home Page</h1>
+  </div>
 </template>
 
 <style scoped>

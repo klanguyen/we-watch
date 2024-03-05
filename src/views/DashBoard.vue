@@ -1,8 +1,10 @@
 <template>
-  <div>This is a dashboard</div>
-  <base-button mode="outline" link to="/">To home</base-button>
-  <base-button link to="/auth" v-if="!isLoggedIn">Login</base-button>
-  <base-button v-if="isLoggedIn" link to="/new-list">Create a list</base-button>
+  <div>
+    <div>This is a dashboard</div>
+    <base-button mode="outline" link to="/">To home</base-button>
+    <base-button link to="/auth" v-if="!isLoggedIn">Login</base-button>
+    <base-button v-if="isLoggedIn" link to="/new-list">Create a list</base-button>
+  </div>
 </template>
 
 <script>
