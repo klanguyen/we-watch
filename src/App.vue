@@ -8,6 +8,18 @@ export default {
   created() {
     this.$store.dispatch('tryLogin');
   },
+  computed: {
+    didAutoLogout() {
+      return this.$store.getters.didAutoLogout;
+    }
+  },
+  watch: {
+    didAutoLogout(currentValue, oldValue) {
+      if(currentValue && currentValue !== oldValue) {
+        this.$router.replace('/');
+      }
+    }
+  }
 }
 </script>
 

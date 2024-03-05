@@ -6,7 +6,8 @@ export default {
         return {
             userId: null,
             token: null,
-            tokenExpiration: null
+            // tokenExpiration: null, <- commented this out because we're not really using it in our vuex store
+            didAutoLogout: false
         };
     },
     mutations,

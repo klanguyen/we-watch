@@ -1,3 +1,4 @@
+let timer;
 export default {
     async login(context, payload) {
         return context.dispatch('auth', {
@@ -39,34 +40,65 @@ export default {
             throw error;
         }
 
+        const tokenExpiresIn = +responseData.expiresIn * 1000; // *1000 to get the time in seconds, + to make sure it's a number
+        //const tokenExpiresIn = 5000; <- tweak to test the auto log out function
+        const expirationDate = new Date().getTime() + tokenExpiresIn;
+
         localStorage.setItem('token', responseData.idToken);
         localStorage.setItem('userId', responseData.localId);
+        localStorage.setItem('tokenExpiration', expirationDate);
+
+        timer = setTimeout(function(){
+            context.dispatch('autoLogout');
+        }, tokenExpiresIn);
 
         context.commit('setUser', {
             token: responseData.idToken,
             userId: responseData.localId,
-            tokenExpiration: responseData.expiresIn
+            // tokenExpiration: expirationDate <- commented this because it's not necessary for the UX
         });
     },
 
     tryLogin(context) {
         const token = localStorage.getItem('token');
         const userId = localStorage.getItem('userId');
+        const tokenExpiration = localStorage.getItem('tokenExpiration');
+
+        const tokenExpiresIn = +tokenExpiration - new Date().getTime();
+
+        // after the token expires, there's no need to try to log in/keep the logged in state
+        if(tokenExpiresIn < 0) {
+            return;
+        }
+
+        timer = setTimeout(function(){
+            context.dispatch('autoLogout');
+        }, tokenExpiresIn)
 
         if(token && userId) {
             context.commit('setUser', {
                 token: token,
-                userId: userId,
-                tokenExpiration: null
+                userId: userId
+                // tokenExpiration: null <- not necessary
             });
         }
     },
 
     logout(context) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('tokenExpiration');
+
+        clearTimeout(timer);
+
         context.commit('setUser', {
             token: null,
-            userId: null,
-            tokenExpiration: null
+            userId: null
         })
+    },
+
+    autoLogout(context) {
+        context.dispatch('logout');
+        context.commit('setAutoLogout');
     }
 };
