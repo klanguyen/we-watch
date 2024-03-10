@@ -6,6 +6,8 @@ import UserAuth from "@/views/auth/UserAuth.vue";
 import store from '../store/index.js';
 import AllMovieLists from "@/views/user/AllMovieLists.vue";
 import SearchResults from "@/views/SearchResults.vue";
+import MovieDetails from "@/views/movie/MovieDetails.vue";
+import NotFound from "@/views/NotFound.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,6 +43,15 @@ const router = createRouter({
       path: '/search/:searchString',
       props: true,
       component: SearchResults
+    },
+    {
+      path: '/movie/:movieId',
+      props: true,
+      component: MovieDetails
+    },
+    {
+      path: '/404',
+      component: NotFound
     }
   ]
 });

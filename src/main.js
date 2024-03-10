@@ -13,6 +13,7 @@ import BaseCard from './components/ui/BaseCard.vue';
 import BaseDialog from "@/components/ui/BaseDialog.vue";
 import BaseSpinner from "@/components/ui/BaseSpinner.vue";
 import SearchBar from "@/components/ui/SearchBar.vue";
+import MovieItem from "./components/movie/MovieItem.vue";
 
 
 const app = createApp(App)
@@ -27,5 +28,6 @@ app.component('base-card', BaseCard);
 app.component('base-dialog', BaseDialog);
 app.component('base-spinner', BaseSpinner);
 app.component('search-bar', SearchBar);
+app.component('movie-item', MovieItem);
 
 app.mount('#app')

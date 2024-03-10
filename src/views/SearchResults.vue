@@ -2,7 +2,13 @@
   <section>
     <h1>Search Results for {{ searchString }}</h1>
     <p v-if="noData">No results</p>
-    <p v-else>{{ movieResults.length }} results</p>
+    <p v-if="!noData">{{ movieResults.length }} results</p>
+    <div
+        v-for="(item, index) in movieResults"
+        :key="index"
+    >
+      <movie-item :movie="item"></movie-item>
+    </div>
   </section>
 </template>
 
