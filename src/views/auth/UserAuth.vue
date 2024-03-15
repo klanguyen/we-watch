@@ -8,6 +8,10 @@
     </base-dialog>
     <base-card>
       <form @submit.prevent="submitForm">
+        <div class="form-control" v-if="mode === 'signup'">
+          <label for="name">Username</label>
+          <input type="text" id="name" v-model.trim="username" />
+        </div>
         <div class="form-control">
           <label for="email">Email</label>
           <input type="email" id="email" v-model.trim="email" />
@@ -32,6 +36,7 @@ export default {
   components: {BaseDialog},
   data() {
     return {
+      username: '',
       email: '',
       password: '',
       formIsValid: true,
@@ -73,6 +78,7 @@ export default {
       const actionPayload = {
         email: this.email,
         password: this.password,
+        username: this.username
       };
 
       try {
@@ -80,6 +86,10 @@ export default {
           await this.$store.dispatch('login', actionPayload);
         } else {
           await this.$store.dispatch('signup', actionPayload);
+          await this.$store.dispatch('addUserDataToFireBase', {
+                        uEmail: this.email,
+                        uUsername: this.username
+          });
         }
         const redirectUrl = '/' + (this.$route.query.redirect || 'dashboard');
         this.$router.replace(redirectUrl);

@@ -4,7 +4,17 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store/index.js';
-import axios from "axios";
+import axios from "axios"
+
+/* import font awesome icon component */
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import {library} from "@fortawesome/fontawesome-svg-core";
+import {fas} from "@fortawesome/free-solid-svg-icons";
+import {far} from "@fortawesome/free-regular-svg-icons";
+import {fab} from '@fortawesome/free-brands-svg-icons'
+
+
+library.add(fas, far, fab)
 
 import TheHeader from './components/layout/TheHeader.vue';
 import TheFooter from './components/layout/TheFooter.vue';
@@ -29,5 +39,6 @@ app.component('base-dialog', BaseDialog);
 app.component('base-spinner', BaseSpinner);
 app.component('search-bar', SearchBar);
 app.component('movie-item', MovieItem);
+app.component('font-awesome-icon', FontAwesomeIcon)
 
 app.mount('#app')

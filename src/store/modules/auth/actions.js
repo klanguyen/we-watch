@@ -1,4 +1,6 @@
 let timer;
+import { db } from '@/firebase/init.js';
+import { collection, doc, addDoc, setDoc } from 'firebase/firestore';
 export default {
     async login(context, payload) {
         return context.dispatch('auth', {
@@ -12,6 +14,24 @@ export default {
             ...payload,
             mode: 'signup'
         });
+    },
+
+    async addUserDataToFireBase(_, payload) {
+        // 'WeWatchUsers' collection reference
+        const colRef = collection(db, "WeWatchUsers");
+        // data to send
+        const dataObj = {
+            username: payload.uUsername,
+            email: payload.uEmail
+        };
+        // create document and return reference to it
+        const docRef = await addDoc(colRef, dataObj);
+        console.log('Created with id: ' + docRef.id);
+        // create leaderboard entry with matching id
+        /*await setDoc(doc(collection(db, 'leaderboard', docRef.id)), {
+            username: payload.username,
+            score: 0
+        });*/
     },
 
     async auth(context, payload) {
