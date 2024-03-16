@@ -4,10 +4,8 @@ import getters from './getters.js';
 export default {
     state() {
         return {
-            userId: null,
-            token: null,
-            // tokenExpiration: null, <- commented this out because we're not really using it in our vuex store
-            didAutoLogout: false
+            user: null,
+            isAuthenticated: false
         };
     },
     mutations,
