@@ -7,24 +7,23 @@
   </router-view>
 </template>
 
-<script>
-export default {
-  created() {
-    this.$store.dispatch('tryLogin');
-  },
-  computed: {
-    didAutoLogout() {
-      return this.$store.getters.didAutoLogout;
-    }
-  },
-  watch: {
-    didAutoLogout(currentValue, oldValue) {
-      if(currentValue && currentValue !== oldValue) {
-        this.$router.replace('/');
-      }
-    }
+<script setup>
+import {computed, watch} from "vue";
+import {useStore} from "vuex";
+import {useRouter} from "vue-router";
+
+const store = useStore();
+const router = useRouter();
+const didAutoLogout = computed(() => {
+  return store.getters.didAutoLogout;
+})
+watch(didAutoLogout, (currentValue, oldValue) => {
+  if(currentValue && currentValue !== oldValue) {
+    router.replace('/')
   }
-}
+})
+
+store.dispatch('tryLogin');
 </script>
 
 <style scoped>

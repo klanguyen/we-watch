@@ -7,15 +7,14 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "DashBoard",
-  computed: {
-    isLoggedIn() {
-      return this.$store.getters.isAuthenticated;
-    }
-  }
-}
+<script setup>
+import {computed} from "vue";
+import {useStore} from "vuex";
+
+const store = useStore();
+const isLoggedIn = computed(() => {
+  return store.getters.isAuthenticated;
+})
 </script>
 
 
