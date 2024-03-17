@@ -7,7 +7,7 @@ export default {
     async login(context, payload) {
         await signInWithEmailAndPassword(auth, payload.email, payload.password)
             .then(response => {
-                console.log(response.user);
+                console.log('logging in...');
                 context.dispatch('saveTokenInfoInLocal', response.user);
                 context.commit('setUser', {
                     token: response.user.accessToken,
@@ -28,6 +28,7 @@ export default {
     async signup(context, payload) {
         await createUserWithEmailAndPassword(auth, payload.email, payload.password)
             .then(response => {
+                console.log('signing up...');
                 context.dispatch('saveTokenInfoInLocal', response.user);
                 context.commit('setUser', {
                     token: response.user.accessToken,
@@ -78,6 +79,7 @@ export default {
     logout(context) {
         signOut(auth)
             .then(() => {
+                console.log('signing out...');
                 localStorage.removeItem('token');
                 localStorage.removeItem('userId');
                 localStorage.removeItem('tokenExpiration');
@@ -102,7 +104,7 @@ export default {
         console.log('token', payload.accessToken);
         console.log('tokenExpiration', expirationDate);
 
-
+        console.log('setting local storage...');
         localStorage.setItem('token', payload.accessToken);
         localStorage.setItem('userId', payload.uid);
         localStorage.setItem('tokenExpiration', expirationDate);
@@ -113,6 +115,7 @@ export default {
     },
 
     tryLogin(context) {
+        console.log('try logging in...');
         const token = localStorage.getItem('token');
         const userId = localStorage.getItem('userId');
         const tokenExpiration = localStorage.getItem('tokenExpiration');
@@ -125,7 +128,9 @@ export default {
         }
 
         timer = setTimeout(function(){
-            context.dispatch('autoLogout');
+            context.dispatch('autoLogout').then(r => {
+                console.log('Session expired', r);
+            });
         }, tokenExpiresIn)
 
         if(token && userId) {
@@ -138,6 +143,7 @@ export default {
     },
 
     autoLogout(context) {
+        console.log('Session expired. Auto logging out...');
         context.dispatch('logout');
         context.commit('setAutoLogout');
     }
