@@ -5,7 +5,7 @@ export default {
     state() {
         return {
             isAuthenticated: false,
-            userId: null,
+            //userId: null,
             token: null,
             didAutoLogout: false
         };

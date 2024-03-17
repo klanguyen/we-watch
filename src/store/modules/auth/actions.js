@@ -9,18 +9,14 @@ export default {
             .then(response => {
                 console.log('logging in...');
                 context.dispatch('saveTokenInfoInLocal', response.user);
-                context.commit('setUser', {
-                    token: response.user.accessToken,
-                    userId: response.user.uid
-                });
+                context.commit('setUser', response.user.accessToken);
                 context.commit('setIsAuthenticated', true);
+                context.commit('setUserId', response.user.uid, {root: true})
             })
             .catch((e) => {
-                context.commit('setUser', {
-                    token: null,
-                    userId: null
-                });
+                context.commit('setUser', null);
                 context.commit('setIsAuthenticated', false);
+                context.commit('setUserId', null, {root: true})
                 console.error('Error logging in', e);
             })
     },
@@ -30,22 +26,18 @@ export default {
             .then(response => {
                 console.log('signing up...');
                 context.dispatch('saveTokenInfoInLocal', response.user);
-                context.commit('setUser', {
-                    token: response.user.accessToken,
-                    userId: response.user.uid
-                });
+                context.commit('setUser', response.user.accessToken);
                 context.commit('setIsAuthenticated', true);
+                context.commit('setUserId', response.user.uid, {root: true})
                 context.dispatch('addUserDataToFireBase', payload)
                     .catch((e) => {
                         console.error('Error creating user document', e);
                 });
             })
             .catch((e) => {
-                context.commit('setUser', {
-                    token: null,
-                    userId: null
-                });
+                context.commit('setUser', null);
                 context.commit('setIsAuthenticated', false);
+                context.commit('setUserId', null, {root: true})
                 console.error('Error creating user', e);
             })
     },
@@ -86,11 +78,9 @@ export default {
 
                 clearTimeout(timer);
 
-                context.commit('setUser', {
-                    token: null,
-                    userId: null
-                });
+                context.commit('setUser', null);
                 context.commit('setIsAuthenticated', false);
+                context.commit('setUserId', null, {root: true})
             })
             .catch(() => {
                 console.error('Failed signing out');
@@ -101,17 +91,14 @@ export default {
         const tokenExpiresIn = payload.stsTokenManager.expirationTime * 1000;
         const expirationDate = new Date().getTime() + tokenExpiresIn;
 
-        console.log('token', payload.accessToken);
-        console.log('tokenExpiration', expirationDate);
-
         console.log('setting local storage...');
         localStorage.setItem('token', payload.accessToken);
         localStorage.setItem('userId', payload.uid);
         localStorage.setItem('tokenExpiration', expirationDate);
 
-        timer = setTimeout(function(){
+        /*timer = setTimeout(function(){
             context.dispatch('autoLogout');
-        }, tokenExpiresIn);
+        }, tokenExpiresIn);*/
     },
 
     tryLogin(context) {
@@ -127,17 +114,15 @@ export default {
             return;
         }
 
-        timer = setTimeout(function(){
+        /*timer = setTimeout(function(){
             context.dispatch('autoLogout').then(r => {
                 console.log('Session expired', r);
             });
-        }, tokenExpiresIn)
+        }, tokenExpiresIn)*/
 
         if(token && userId) {
-            context.commit('setUser', {
-                token: token,
-                userId: userId
-            })
+            context.commit('setUser', token);
+            context.commit('setUserId', userId, {root: true})
             context.commit('setIsAuthenticated', true);
         }
     },

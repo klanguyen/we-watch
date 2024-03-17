@@ -10,13 +10,18 @@ const store = createStore({
     },
     state() {
         return {
-            //userId: 'c3'
+            userId: null
         };
     },
     getters: {
-        /*userId(state) {
+        userId(state) {
             return state.userId;
-        }*/
+        }
+    },
+    mutations: {
+        setUserId(state, payload) {
+            state.userId = payload
+        }
     }
 });
 

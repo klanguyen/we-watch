@@ -1,9 +1,7 @@
 export default {
-    isAuthenticated(state) {
-        return state.userId !== null && state.userId !== undefined;
-    },
-    userId(state) {
-        return state.userId;
+    isAuthenticated(state, _, _2, rootGetters) {
+        //return state.userId !== null && state.userId !== undefined;
+        return rootGetters.userId !== null && rootGetters.userId !== undefined;
     },
     token(state) {
         return state.token;
