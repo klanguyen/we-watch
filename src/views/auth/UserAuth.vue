@@ -1,117 +1,112 @@
+<script setup>
+
+import { ref, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+
+const store = useStore();
+const router = useRouter();
+const route = useRoute();
+
+const userValues = ref({
+  username: '',
+  email: '',
+  password: ''
+})
+const formValues = ref({
+  formIsValid: true,
+  mode: 'login'
+})
+const pageValues = ref({
+  isLoading: false,
+  error: ''
+})
+
+const submitButtonCaption = computed(() => {
+  return formValues.value.mode === 'login' ? 'Login' : 'Signup'
+})
+const switchModeButtonCaption = computed(() => {
+  return formValues.value.mode === 'login' ? 'Signup instead' : 'Login instead';
+})
+
+async function submitForm() {
+  formValues.value.formIsValid = true;
+  if (
+      userValues.value.email === '' ||
+      !userValues.value.email.includes('@') ||
+      userValues.value.password.length < 6
+  ) {
+    formValues.value.formIsValid = false;
+    return;
+  }
+
+  pageValues.value.isLoading = true;
+
+  const actionPayload = {
+    email: userValues.value.email,
+    password: userValues.value.password,
+    username: userValues.value.username
+  };
+
+  try {
+    if(formValues.value.mode === 'login') {
+      await store.dispatch('login', actionPayload);
+    } else {
+      await store.dispatch('signup', actionPayload);
+    }
+    const redirectUrl = '/' + (route.query.redirect || 'dashboard');
+    await router.replace(redirectUrl);
+  } catch(err) {
+    // TODO: fix this to show error on dialog
+    pageValues.value.error = err.message || 'Failed to authenticate, try later';
+  }
+
+  pageValues.value.isLoading = false;
+}
+
+function switchAuthMode() {
+  if(formValues.value.mode === 'login') {
+    formValues.value.mode = 'signup';
+  } else {
+    formValues.value.mode = 'login';
+  }
+}
+
+function handleError() {
+  pageValues.value.error = '';
+}
+
+</script>
+
 <template>
   <div>
-    <base-dialog :show="!!error" title="Ah...error occurred" @close="handleError">
-      <p>{{ error }}</p>
+    <base-dialog :show="!!pageValues.error" title="Ah...error occurred" @close="handleError">
+      {{ pageValues.error }}
     </base-dialog>
-    <base-dialog :show="isLoading" title="Authenticating..." fixed>
+    <base-dialog :show="pageValues.isLoading" title="Authenticating..." fixed>
       <base-spinner></base-spinner>
     </base-dialog>
     <base-card>
       <form @submit.prevent="submitForm">
-        <div class="form-control" v-if="mode === 'signup'">
+        <div class="form-control" v-if="formValues.mode === 'signup'">
           <label for="name">Username</label>
-          <input type="text" id="name" v-model.trim="username" />
+          <input type="text" id="name" v-model.trim="userValues.username" />
         </div>
         <div class="form-control">
           <label for="email">Email</label>
-          <input type="email" id="email" v-model.trim="email" />
+          <input type="email" id="email" v-model.trim="userValues.email" />
         </div>
         <div class="form-control">
           <label for="password">Password</label>
-          <input type="password" id="password" v-model.trim="password" />
+          <input type="password" id="password" v-model.trim="userValues.password" />
         </div>
-        <p v-if="!formIsValid">Please enter a valid email and password (must be 6 characters long)</p>
+        <p v-if="!formValues.formIsValid">Please enter a valid email and password (must be 6 characters long)</p>
         <base-button>{{ submitButtonCaption }}</base-button>
         <base-button type="button" mode="flat" @click="switchAuthMode">{{ switchModeButtonCaption }}</base-button>
       </form>
     </base-card>
   </div>
 </template>
-
-<script>
-import BaseDialog from "@/components/ui/BaseDialog.vue";
-
-export default {
-  name: "UserAuth",
-  components: {BaseDialog},
-  data() {
-    return {
-      username: '',
-      email: '',
-      password: '',
-      formIsValid: true,
-      mode: 'login',
-      isLoading: false,
-      error: null,
-    }
-  },
-  computed: {
-    submitButtonCaption() {
-      if(this.mode === 'login') {
-        return 'Login';
-      } else {
-        return 'Signup';
-      }
-    },
-    switchModeButtonCaption() {
-      if(this.mode === 'login') {
-        return 'Signup instead';
-      } else {
-        return 'Login instead';
-      }
-    }
-  },
-  methods: {
-    async submitForm() {
-      this.formIsValid = true;
-      if (
-          this.email === '' ||
-          !this.email.includes('@') ||
-          this.password.length < 6
-      ) {
-        this.formIsValid = false;
-        return;
-      }
-
-      this.isLoading = true;
-
-      const actionPayload = {
-        email: this.email,
-        password: this.password,
-        username: this.username
-      };
-
-      try {
-        if(this.mode === 'login') {
-          await this.$store.dispatch('login', actionPayload);
-        } else {
-          await this.$store.dispatch('signup', actionPayload);
-          await this.$store.dispatch('addUserDataToFireBase', {
-                        uEmail: this.email,
-                        uUsername: this.username
-          });
-        }
-        const redirectUrl = '/' + (this.$route.query.redirect || 'dashboard');
-        this.$router.replace(redirectUrl);
-      } catch(err) {
-        this.error = err.message || 'Failed to authenticate, try later';
-      }
-
-      this.isLoading = false;
-    },
-    switchAuthMode() {
-      if(this.mode === 'login'){
-        this.mode = 'signup';
-      } else {
-        this.mode = 'login';
-      }
-    },
-    handleError() {
-      this.error = null;
-    }
-  }
-}
-</script>
 
 <style scoped>
 form {

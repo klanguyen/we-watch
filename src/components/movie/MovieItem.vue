@@ -1,34 +1,33 @@
-<script>
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import TmdbAPI from "@/services/TmdbAPI.js";
-export default {
-  name: "MovieItem",
-  data() {
-    return {
-      posterUrl: ''
-    }
-  },
-  props: {
-    movie: {
-      type: Object,
-      required: true
-    },
-  },
-  methods: {
-    toDetailsPage(id) {
-      this.$router.replace(`/movie/${id}`);
-    }
-  },
-  mounted() {
-    this.posterUrl = TmdbAPI.getPosterImageUrl(this.movie.poster_path);
+
+const router = useRouter();
+
+const posterUrl = ref('');
+
+const props = defineProps({
+  movie: {
+    type: Object,
+    required: true
   }
+})
+
+function toDetailsPage(id) {
+  router.replace(`/movie/${id}`);
 }
+
+onMounted(() => {
+  posterUrl.value = TmdbAPI.getPosterImageUrl(props.movie.poster_path);
+})
 </script>
 
 <template>
-  <base-card @click="toDetailsPage(movie.id)">
-    <h4>{{ movie.title }}</h4>
-    <img :src="posterUrl" :alt="movie.title + ' poster'">
-    <p>{{ movie.overview }}</p>
+  <base-card @click="toDetailsPage(props.movie.id)">
+    <h4>{{ props.movie.title }}</h4>
+    <img :src="posterUrl" :alt="props.movie.title + ' poster'">
+    <p>{{ props.movie.overview }}</p>
   </base-card>
 </template>
 

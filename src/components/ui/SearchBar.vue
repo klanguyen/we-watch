@@ -1,3 +1,16 @@
+<script setup>
+import {ref} from "vue";
+import {useRouter} from "vue-router";
+
+const router = useRouter();
+const searchString = ref('');
+
+function submitForm(){
+  router.push('/search/' + searchString.value);
+  searchString.value = '';
+}
+</script>
+
 <template>
   <form @submit.prevent="submitForm">
     <div class="form-control">
@@ -9,22 +22,6 @@
     </div>
   </form>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      searchString: ''
-    }
-  },
-  methods: {
-    submitForm(){
-      this.$router.push('/search/' + this.searchString);
-      this.searchString = '';
-    }
-  }
-}
-</script>
 
 <style scoped>
 .form-control {

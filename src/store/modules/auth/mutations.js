@@ -1,6 +1,8 @@
 export default {
     setUser(state, payload) {
-        state.user = payload;
+        state.token = payload.token;
+        state.userId = payload.userId;
+        state.didAutoLogout = false;
     },
     setIsAuthenticated(state, payload) {
         state.isAuthenticated = payload;

@@ -2,28 +2,50 @@ let timer;
 import { db, auth } from '@/firebase/init.js';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { collection, doc, addDoc, setDoc } from 'firebase/firestore';
+
 export default {
     async login(context, payload) {
         await signInWithEmailAndPassword(auth, payload.email, payload.password)
-            .then(user => {
-                context.commit('setUser', user);
+            .then(response => {
+                console.log(response.user);
+                context.dispatch('saveTokenInfoInLocal', response.user);
+                context.commit('setUser', {
+                    token: response.user.accessToken,
+                    userId: response.user.uid
+                });
                 context.commit('setIsAuthenticated', true);
             })
-            .catch(() => {
-                context.commit('setUser', null);
+            .catch((e) => {
+                context.commit('setUser', {
+                    token: null,
+                    userId: null
+                });
                 context.commit('setIsAuthenticated', false);
+                console.error('Error logging in', e);
             })
     },
 
     async signup(context, payload) {
         await createUserWithEmailAndPassword(auth, payload.email, payload.password)
-            .then(user => {
-                context.commit('setUser', user);
+            .then(response => {
+                context.dispatch('saveTokenInfoInLocal', response.user);
+                context.commit('setUser', {
+                    token: response.user.accessToken,
+                    userId: response.user.uid
+                });
                 context.commit('setIsAuthenticated', true);
+                context.dispatch('addUserDataToFireBase', payload)
+                    .catch((e) => {
+                        console.error('Error creating user document', e);
+                });
             })
-            .catch(() => {
-                context.commit('setUser', null);
+            .catch((e) => {
+                context.commit('setUser', {
+                    token: null,
+                    userId: null
+                });
                 context.commit('setIsAuthenticated', false);
+                console.error('Error creating user', e);
             })
     },
 
@@ -32,8 +54,8 @@ export default {
         const colRef = collection(db, "WeWatchUsers");
         // data to send
         const dataObj = {
-            username: payload.uUsername,
-            email: payload.uEmail
+            username: payload.username,
+            email: payload.email
         };
         // create document and return reference to it
         const docRef = await addDoc(colRef, dataObj);
@@ -43,7 +65,7 @@ export default {
         if(user) {
             // create leaderboard entry with matching id
             const leaderboardUserObj = {
-                username: payload.uUsername,
+                username: payload.username,
                 score: 0
             }
             await setDoc(doc(db, "leaderboard", user.uid), leaderboardUserObj);
@@ -56,11 +78,67 @@ export default {
     logout(context) {
         signOut(auth)
             .then(() => {
-                context.commit('setUser', null);
-                context.commit('setIsAuthenticated', false)
+                localStorage.removeItem('token');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('tokenExpiration');
+
+                clearTimeout(timer);
+
+                context.commit('setUser', {
+                    token: null,
+                    userId: null
+                });
+                context.commit('setIsAuthenticated', false);
             })
             .catch(() => {
                 console.error('Failed signing out');
             })
     },
+
+    saveTokenInfoInLocal(context, payload) {
+        const tokenExpiresIn = payload.stsTokenManager.expirationTime * 1000;
+        const expirationDate = new Date().getTime() + tokenExpiresIn;
+
+        console.log('token', payload.accessToken);
+        console.log('tokenExpiration', expirationDate);
+
+
+        localStorage.setItem('token', payload.accessToken);
+        localStorage.setItem('userId', payload.uid);
+        localStorage.setItem('tokenExpiration', expirationDate);
+
+        timer = setTimeout(function(){
+            context.dispatch('autoLogout');
+        }, tokenExpiresIn);
+    },
+
+    tryLogin(context) {
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+        const tokenExpiration = localStorage.getItem('tokenExpiration');
+
+        const tokenExpiresIn = +tokenExpiration - new Date().getTime();
+
+        // after the token expires, there's no need to try to log in/keep the logged in state
+        if(tokenExpiresIn < 0) {
+            return;
+        }
+
+        timer = setTimeout(function(){
+            context.dispatch('autoLogout');
+        }, tokenExpiresIn)
+
+        if(token && userId) {
+            context.commit('setUser', {
+                token: token,
+                userId: userId
+            })
+            context.commit('setIsAuthenticated', true);
+        }
+    },
+
+    autoLogout(context) {
+        context.dispatch('logout');
+        context.commit('setAutoLogout');
+    }
 };
