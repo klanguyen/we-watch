@@ -10,18 +10,23 @@ const store = createStore({
     },
     state() {
         return {
-            userId: null
+            userId: null,
+            email: null
         };
     },
     getters: {
         userId(state) {
             return state.userId;
+        },
+        email(state) {
+            return state.email;
         }
     },
     mutations: {
-        setUserId(state, payload) {
-            state.userId = payload
-        }
+        setCurrentUser(state, payload) {
+            state.userId = payload.userId;
+            state.email = payload.email;
+        },
     }
 });
 

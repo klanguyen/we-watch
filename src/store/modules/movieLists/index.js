@@ -5,7 +5,11 @@ export default {
     namespaced: true,
     state() {
         return {
-            lastFetch: null,
+            lists: [],
+            watchedList: [],
+            gottaWatchList: [],
+            watched: null,
+            gottaWatched: null
         }
     },
     mutations,

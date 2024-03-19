@@ -1,6 +1,6 @@
 let timer;
 import { db, auth } from '@/firebase/init.js';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import {createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut} from 'firebase/auth'
 import { collection, doc, addDoc, setDoc } from 'firebase/firestore';
 
 export default {
@@ -11,12 +11,18 @@ export default {
                 context.dispatch('saveTokenInfoInLocal', response.user);
                 context.commit('setUser', response.user.accessToken);
                 context.commit('setIsAuthenticated', true);
-                context.commit('setUserId', response.user.uid, {root: true})
+                context.commit('setCurrentUser', {
+                    userId: response.user.uid,
+                    email: response.user.email
+                }, {root: true})
             })
             .catch((e) => {
                 context.commit('setUser', null);
                 context.commit('setIsAuthenticated', false);
-                context.commit('setUserId', null, {root: true})
+                context.commit('setCurrentUser', {
+                    userID: null,
+                    email: null
+                }, {root: true})
                 console.error('Error logging in', e);
             })
     },
@@ -28,7 +34,10 @@ export default {
                 context.dispatch('saveTokenInfoInLocal', response.user);
                 context.commit('setUser', response.user.accessToken);
                 context.commit('setIsAuthenticated', true);
-                context.commit('setUserId', response.user.uid, {root: true})
+                context.commit('setCurrentUser', {
+                    userId: response.user.uid,
+                    email: response.user.email
+                }, {root: true});
                 context.dispatch('addUserDataToFireBase', payload)
                     .catch((e) => {
                         console.error('Error creating user document', e);
@@ -37,7 +46,10 @@ export default {
             .catch((e) => {
                 context.commit('setUser', null);
                 context.commit('setIsAuthenticated', false);
-                context.commit('setUserId', null, {root: true})
+                context.commit('setCurrentUser', {
+                    userId: null,
+                    email: null
+                }, {root: true})
                 console.error('Error creating user', e);
             })
     },
@@ -48,7 +60,9 @@ export default {
         // data to send
         const dataObj = {
             username: payload.username,
-            email: payload.email
+            email: payload.email,
+            gottaWatch: [],
+            watched: []
         };
         // create document and return reference to it
         const docRef = await addDoc(colRef, dataObj);
@@ -80,7 +94,10 @@ export default {
 
                 context.commit('setUser', null);
                 context.commit('setIsAuthenticated', false);
-                context.commit('setUserId', null, {root: true})
+                context.commit('setCurrentUser', {
+                    userId: null,
+                    email: null
+                }, {root: true})
             })
             .catch(() => {
                 console.error('Failed signing out');
@@ -94,6 +111,7 @@ export default {
         console.log('setting local storage...');
         localStorage.setItem('token', payload.accessToken);
         localStorage.setItem('userId', payload.uid);
+        localStorage.setItem('userEmail', payload.email);
         localStorage.setItem('tokenExpiration', expirationDate);
 
         /*timer = setTimeout(function(){
@@ -105,6 +123,7 @@ export default {
         console.log('try logging in...');
         const token = localStorage.getItem('token');
         const userId = localStorage.getItem('userId');
+        const userEmail = localStorage.getItem('userEmail');
         const tokenExpiration = localStorage.getItem('tokenExpiration');
 
         const tokenExpiresIn = +tokenExpiration - new Date().getTime();
@@ -120,9 +139,12 @@ export default {
             });
         }, tokenExpiresIn)*/
 
-        if(token && userId) {
+        if(token && userId && userEmail) {
             context.commit('setUser', token);
-            context.commit('setUserId', userId, {root: true})
+            context.commit('setCurrentUser', {
+                userId: userId,
+                email: userEmail
+            }, {root: true})
             context.commit('setIsAuthenticated', true);
         }
     },

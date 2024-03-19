@@ -1,25 +1,44 @@
 <script setup>
-import {onMounted, ref} from 'vue';
+import {computed, onMounted, ref} from 'vue';
+import {useStore} from "vuex";
 import TmdbAPI from "@/services/TmdbAPI.js";
+import BaseButton from "@/components/ui/BaseButton.vue";
+import logger from "@fortawesome/vue-fontawesome/src/logger.js";
 
+const store = useStore();
 const props = defineProps(['movieId']);
+
 const theMovie = ref('');
 const posterUrl = ref('');
-const watched = ref(false);
-const gottaWatch = ref(false);
+
+const isLoggedIn = computed(() => {
+  return store.getters.isAuthenticated;
+})
+
+const redirectLink = computed(() => {
+  return '/auth?redirect=movie/' + props.movieId;
+})
 
 function addWatchedMovie() {
-  watched.value = true;
+  store.dispatch('movieLists/addWatchedMovie', theMovie.value)
 }
 function removeWatchedMovie() {
-  watched.value = false;
+  store.dispatch('movieLists/removeWatchedMovie', parseInt(props.movieId));
 }
 function addGottaWatchMovie() {
-  gottaWatch.value = true;
+  store.dispatch('movieLists/addGottaWatchMovie', theMovie.value)
 }
 function removeGottaWatchMovie() {
-  gottaWatch.value = false;
+  store.dispatch('movieLists/removeGottaWatchMovie', parseInt(props.movieId));
 }
+
+const watched = computed(() => {
+  return store.getters["movieLists/watched"];
+})
+
+const gottaWatched = computed(() => {
+  return store.getters["movieLists/gottaWatched"];
+})
 
 onMounted(() => {
   TmdbAPI.fetchSingleMovie(props.movieId)
@@ -28,8 +47,10 @@ onMounted(() => {
         theMovie.value = response;
         posterUrl.value = TmdbAPI.getPosterImageUrl(theMovie.value.poster_path);
       }).catch(err => {
-        console.error('AJAX QUERY ERROR', error);
+        console.error('AJAX QUERY ERROR', err);
   });
+  store.dispatch('movieLists/getWatchedStatus', parseInt(props.movieId));
+  store.dispatch('movieLists/getGottaWatchStatus', parseInt(props.movieId));
 })
 </script>
 
@@ -44,7 +65,17 @@ onMounted(() => {
     >
       <li>{{ item.name }}</li>
     </ul>
-    <div class="actions">
+    <div
+        class="login-actions"
+        v-if="!isLoggedIn"
+    >
+      <base-button
+          type="button"
+          mode="flat"
+          link :to="redirectLink"
+      >Login for further actions</base-button>
+    </div>
+    <div class="actions" v-else>
       <base-button
           type="button"
           mode="flat"
@@ -61,15 +92,15 @@ onMounted(() => {
       <base-button
           type="button"
           mode="flat"
-          v-if="!gottaWatch"
+          v-if="!gottaWatched"
           @click="addGottaWatchMovie"
-      ><font-awesome-icon :icon="['far', 'bookmark']" /> Want to watch</base-button>
+      ><font-awesome-icon :icon="['far', 'bookmark']" /> Gotta watch</base-button>
       <base-button
           type="button"
           mode="flat"
           v-else
           @click="removeGottaWatchMovie"
-      ><font-awesome-icon :icon="['fas', 'bookmark']" /> Want to watch</base-button>
+      ><font-awesome-icon :icon="['fas', 'bookmark']" /> Gotta watch</base-button>
     </div>
   </section>
 </template>

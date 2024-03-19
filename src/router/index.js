@@ -8,6 +8,8 @@ import AllMovieLists from "@/views/user/AllMovieLists.vue";
 import SearchResults from "@/views/SearchResults.vue";
 import MovieDetails from "@/views/movie/MovieDetails.vue";
 import NotFound from "@/views/NotFound.vue";
+import WatchList from "@/views/user/WatchList.vue";
+import GottaWatchList from "@/views/user/GottaWatchList.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,7 +54,21 @@ const router = createRouter({
     {
       path: '/404',
       component: NotFound
-    }
+    },
+    {
+      path: '/user/watched-list',
+      component: WatchList,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/user/gotta-watch-list',
+      component: GottaWatchList,
+      meta: {
+        requiresAuth: true
+      }
+    },
   ]
 });
 
