@@ -10,6 +10,7 @@ import MovieDetails from "@/views/movie/MovieDetails.vue";
 import NotFound from "@/views/NotFound.vue";
 import WatchList from "@/views/user/WatchList.vue";
 import GottaWatchList from "@/views/user/GottaWatchList.vue";
+import PublicLists from "@/views/discover/PublicLists.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,9 +43,20 @@ const router = createRouter({
       }
     },
     {
+      path: '/user/my-lists',
+      component: AllMovieLists,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/search/:searchString',
       props: true,
       component: SearchResults
+    },
+    {
+      path: '/discover/movie-lists',
+      component: PublicLists
     },
     {
       path: '/movie/:movieId',

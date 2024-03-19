@@ -5,7 +5,7 @@ export default {
     namespaced: true,
     state() {
         return {
-            lists: [],
+            movieLists: [],
             watchedList: [],
             gottaWatchList: [],
             watched: null,

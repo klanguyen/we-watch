@@ -1,5 +1,18 @@
-import {db} from '@/firebase/init.js';
-import {collection, query, where, doc, setDoc, getDocs, updateDoc, arrayUnion, arrayRemove, onSnapshot, deleteDoc} from 'firebase/firestore';
+import {db, auth} from '@/firebase/init.js';
+import {
+    collection,
+    query,
+    where,
+    doc,
+    setDoc,
+    getDocs,
+    updateDoc,
+    arrayUnion,
+    arrayRemove,
+    onSnapshot,
+    deleteDoc,
+    addDoc
+} from 'firebase/firestore';
 export default {
     async fetchWatchedList(context) {
         const usersColRef = collection(db, 'WeWatchUsers');
@@ -165,56 +178,90 @@ export default {
         })
     },
 
-    async createList(context, data) {
+    async createList(context, payload) {
         const newListData = {
-            title: data.listTitle,
-            description: data.listDescription,
-            isPublic: data.isPublic
+            title: payload.listTitle,
+            description: payload.listDescription,
+            isPublic: payload.isPublic,
+            createdByUserEmail: auth.currentUser.email,
+            movies: []
         };
-        const response = await fetch(
-            `https://wewatch-d5a51-default-rtdb.firebaseio.com/movie-lists/${payload.userId}.json`,
-            {
-                method: 'POST',
-                body: JSON.stringify(newListData)
+
+        // add to lists collection
+        const newListDocRef = await addDoc(collection(db, 'MovieLists'), newListData);
+
+        // add list id to user's lists array
+        const usersColRef = collection(db, 'WeWatchUsers');
+        const q = query(usersColRef, where('email', '==', context.rootGetters.email));
+
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((userDoc) => {
+            // add new list id to movieLists array
+            updateDoc(doc(db, 'WeWatchUsers', userDoc.id), {
+                movieLists: arrayUnion(newListDocRef.id)
+            })
         });
-
-        const responseData = await response.json();
-
-        if(!response.ok) {
-            const error = new Error(responseData.message || 'Failed to create the list.');
-            throw error;
-        }
-
-        newListData.id = responseData.name;
-        newListData.userId = payload.userId;
-
-        context.commit('addList', newListData);
     },
 
     async fetchLists(context) {
-        const userId = context.rootGetters.userId;
-        const response = await fetch(`https://wewatch-d5a51-default-rtdb.firebaseio.com/movie-lists/${userId}.json`);
-        const responseData = await response.json();
+        context.commit('setLists', []);
+        const listsColRef = collection(db, 'MovieLists');
+        const q = query(
+            listsColRef,
+            where(
+                'createdByUserEmail',
+                '==',
+                context.rootGetters.email
+            )
+        );
 
-        if(!response.ok) {
-            const error = new Error(responseData.message || 'Failed to fetch list.');
-            throw error;
-        }
+        await getDocs(q)
+            .then(querySnapshot => {
+                if(!querySnapshot.empty) {
+                    querySnapshot.forEach(listDoc => {
+                        let list = {
+                            id: listDoc.id,
+                            data: listDoc.data()
+                        };
+                        context.commit('addList', list);
+                    })
+                } else {
+                    context.commit('setLists', []);
+                }
+            })
+            .catch(e => {
+                console.error('Error getting lists', e);
+            });
+    },
 
-        const movieLists = [];
+    async fetchPublicLists(context) {
+        context.commit('setLists', []);
+        const listsColRef = collection(db, 'MovieLists');
+        const q = query(
+            listsColRef,
+            where(
+                'isPublic',
+                '==',
+                true
+            )
+        );
 
-        for (const key in responseData) {
-            const list = {
-                id: key,
-                userId: userId,
-                listTitle: responseData[key].listTitle,
-                listDescription: responseData[key].listDescription,
-                isPublic: responseData[key].isPublic
-            };
-
-            movieLists.push(list);
-        }
-
-        context.commit('setLists', movieLists);
+        await getDocs(q)
+            .then(querySnapshot => {
+                if(!querySnapshot.empty) {
+                    querySnapshot.forEach(listDoc => {
+                        let list = {
+                            id: listDoc.id,
+                            data: listDoc.data()
+                        }
+                        context.commit('addList', list);
+                    })
+                } else {
+                    context.commit('setLists', []);
+                }
+            })
+            .catch(e => {
+                console.error('Error getting lists', e);
+            });
     }
 }

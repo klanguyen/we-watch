@@ -62,7 +62,8 @@ export default {
             username: payload.username,
             email: payload.email,
             gottaWatch: [],
-            watched: []
+            watched: [],
+            movieLists: []
         };
         // create document and return reference to it
         const docRef = await addDoc(colRef, dataObj);

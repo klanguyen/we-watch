@@ -1,7 +1,6 @@
 export default {
-    movieLists(state, _, _2, rootGetters) {
-        const userId = rootGetters.userId;
-        return state.movieLists.filter(list => list.userId === userId);
+    movieLists(state) {
+        return state.movieLists
     },
     hasLists(state) {
         return state.movieLists && state.movieLists.length > 0;
