@@ -6,6 +6,7 @@ import {
     doc,
     setDoc,
     getDocs,
+    getDoc,
     updateDoc,
     arrayUnion,
     arrayRemove,
@@ -263,5 +264,37 @@ export default {
             .catch(e => {
                 console.error('Error getting lists', e);
             });
+    },
+
+    async fetchSingleList(context, payload) {
+        console.log('Fetching...', payload);
+        const listDocRef = doc(db, 'MovieLists', payload);
+        const docSnap = await getDoc(listDocRef);
+        let theList = null;
+        let theListMovies = [];
+
+        if(docSnap.exists()) {
+            theList = docSnap.data()
+        }
+
+        const moviesColRef = collection(db, 'MovieLists', payload, 'Movies');
+        await getDocs(moviesColRef)
+            .then(results => {
+                if(!results.empty) {
+                    results.forEach(movieDoc => {
+                        let movieData = movieDoc.data();
+                        theListMovies.push(movieData);
+                    })
+                } else {
+                    theListMovies = [];
+                }
+            }).catch(err => {
+                console.error('Error getting movies in the list', err);
+            })
+
+        context.commit("setTheList", {
+            theList: theList,
+            theListMovies: theListMovies
+        })
     }
 }

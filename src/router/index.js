@@ -11,6 +11,7 @@ import NotFound from "@/views/NotFound.vue";
 import WatchList from "@/views/user/WatchList.vue";
 import GottaWatchList from "@/views/user/GottaWatchList.vue";
 import PublicLists from "@/views/discover/PublicLists.vue";
+import ListDetails from "@/views/list/ListDetails.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -57,6 +58,11 @@ const router = createRouter({
     {
       path: '/discover/movie-lists',
       component: PublicLists
+    },
+    {
+      path: '/list/:listId',
+      props: true,
+      component: ListDetails
     },
     {
       path: '/movie/:movieId',

@@ -1,5 +1,5 @@
 <template>
-  <li>
+  <li @click="toDetailsPage(listId)">
     <div>
       <h3>{{ listTitle }}</h3>
       <p>{{ listDescription }}</p>
@@ -10,12 +10,20 @@
 </template>
 
 <script setup>
+import {useRouter} from "vue-router";
+
+const router = useRouter();
 const props = defineProps([
     'listTitle',
     'listDescription',
     'userEmail',
-    'isPublic'
+    'isPublic',
+    'listId'
 ])
+
+function toDetailsPage(id) {
+  router.replace(`/list/${id}`);
+}
 </script>
 
 <style scoped>

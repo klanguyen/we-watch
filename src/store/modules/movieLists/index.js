@@ -6,6 +6,8 @@ export default {
     state() {
         return {
             movieLists: [],
+            theList: null,
+            theListMovies: [],
             watchedList: [],
             gottaWatchList: [],
             watched: null,

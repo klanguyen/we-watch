@@ -53,6 +53,7 @@ loadLists();
           <list-item
               v-for="list in publicLists"
               :key="list.id"
+              :list-id="list.id"
               :list-title="list.data.title"
               :list-description="list.data.description"
               :is-public="list.data.isPublic"

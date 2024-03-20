@@ -5,6 +5,13 @@ export default {
     setLists(state, payload) {
         state.movieLists = payload;
     },
+    setTheList(state, payload) {
+        state.theList = payload.theList;
+        state.theListMovies = payload.theListMovies
+    },
+    addMovieToTheList(state, payload) {
+        state.theListMovies.push(payload);
+    },
     setWatchedList(state, payload) {
         state.watchedList = payload
     },

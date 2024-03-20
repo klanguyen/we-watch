@@ -5,6 +5,12 @@ export default {
     hasLists(state) {
         return state.movieLists && state.movieLists.length > 0;
     },
+    theList(state) {
+        return state.theList;
+    },
+    theListMovies(state){
+        return state.theListMovies;
+    },
     watchedList(state) {
         return state.watchedList;
     },
