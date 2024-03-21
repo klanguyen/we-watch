@@ -2,6 +2,7 @@
 import {computed, ref} from "vue";
 import {useStore} from "vuex";
 import MovieItem from "@/components/movie/MovieItem.vue";
+import BaseSpinner from "@/components/ui/BaseSpinner.vue";
 
 const store = useStore();
 const props = defineProps(['listId']);
@@ -18,6 +19,10 @@ const listStatus = computed(() => {
 })
 const hasMovies = computed(() => {
   return moviesInTheList.value.length !== 0;
+})
+const listIsLoading = computed(() => {
+  isLoading.value = true;
+  return theList.value === null;
 })
 
 async function loadList() {
@@ -46,7 +51,12 @@ loadList();
     >
       <p>{{ error }}</p>
     </base-dialog>
-    <section>
+
+    <div v-if="listIsLoading">
+      <base-spinner v-if="isLoading"></base-spinner>
+    </div>
+
+    <section v-else>
       <base-spinner v-if="isLoading"></base-spinner>
       <h1>{{theList.title}}</h1>
       <p>{{theList.description}}</p>
