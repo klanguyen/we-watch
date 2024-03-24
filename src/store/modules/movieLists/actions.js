@@ -209,15 +209,17 @@ export default {
                     });
 
                     // add movies to the list
-                    movies.forEach(movie => {
-                        setDoc(doc(collection(db, 'MovieLists', response.id, 'Movies')), movie)
-                            .then(r => {
-                                console.log('Added movie successfully!');
-                            })
-                            .catch(err => {
-                                console.log('Failed added movie', err);
-                            });
-                    });
+                    if(movies.length > 0) {
+                        movies.forEach(movie => {
+                            setDoc(doc(collection(db, 'MovieLists', response.id, 'Movies')), movie)
+                                .then(r => {
+                                    console.log('Added movie successfully!');
+                                })
+                                .catch(err => {
+                                    console.log('Failed added movie', err);
+                                });
+                        })
+                    };
 
                 })
                 .catch(err => {

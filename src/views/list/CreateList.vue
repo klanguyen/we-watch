@@ -39,10 +39,12 @@ function submitForm() {
 }
 
 function getSelectedMovies(movies) {
-  movies.forEach(movie => {
-    selectedMovies.value.push(movie);
-    selectedMoviesId.value.push(movie.id);
-  });
+  if(movies.length > 0) {
+    movies.forEach(movie => {
+      selectedMovies.value.push(movie);
+      selectedMoviesId.value.push(movie.id);
+    });
+  }
 }
 </script>
 
