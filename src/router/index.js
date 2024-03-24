@@ -44,7 +44,7 @@ const router = createRouter({
       }
     },
     {
-      path: '/user/my-lists',
+      path: '/user/lists',
       component: AllMovieLists,
       meta: {
         requiresAuth: true
