@@ -44,6 +44,7 @@ loadLists();
       <base-card>
         <header>
           <h2>All movie lists created</h2>
+          <base-button link to="/new-list">Create a list</base-button>
         </header>
         <base-spinner v-if="isLoading"></base-spinner>
         <ul v-else-if="hasLists && !isLoading">

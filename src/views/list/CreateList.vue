@@ -2,6 +2,7 @@
 import {ref} from 'vue';
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
+import AddAMovieBar from "@/components/movie-lists/AddAMovieBar.vue";
 
 const store = useStore();
 const router = useRouter();
@@ -10,47 +11,55 @@ const listTitle = ref('');
 const listDescription = ref('');
 const isPublic = ref(true);
 const formIsValid = ref(true);
+const selectedMovies = ref([]);
+const selectedMoviesId = ref([]);
+
+function backToLists() {
+  router.replace('/user/my-lists');
+}
 
 function validateForm() {
   formIsValid.value = !(listTitle.value === '' || listDescription.value === '');
 }
 
 function submitForm() {
+  console.log('Submitting..');
   validateForm();
 
-  if(formIsValid) {
+  if(formIsValid.value) {
     store.dispatch('movieLists/createList', {
       listTitle: listTitle.value,
       listDescription: listDescription.value,
       isPublic: isPublic.value,
+      selectedMovies: selectedMovies.value,
+      selectedMovieIds: selectedMoviesId.value
     });
     router.replace('/user/my-lists');
   }
 }
+
+function getSelectedMovies(movies) {
+  movies.forEach(movie => {
+    selectedMovies.value.push(movie);
+    selectedMoviesId.value.push(movie.id);
+  });
+}
 </script>
 
 <template>
-  <section>
-    <base-card>
-      <h2>Create a new movie list</h2>
+  <section class="container">
+      <h2>New list</h2>
       <form @submit.prevent="submitForm">
-        <div class="form-control">
+        <div>
           <label for="listTitle">List Title</label>
           <input
+              class="form-control"
               type="text"
               id="listTitle"
               v-model.trim="listTitle"
           />
         </div>
-        <div class="form-control">
-          <label for="listDescription">List Description</label>
-          <textarea
-              id="listDescription"
-              rows="5"
-              v-model.trim="listDescription"
-          ></textarea>
-        </div>
-        <div class="form-control">
+        <div>
           <div>
             <input
                 type="checkbox"
@@ -60,10 +69,21 @@ function submitForm() {
             <label for="isPublic">Public list</label>
           </div>
         </div>
+        <div>
+          <label for="listDescription">List Description</label>
+          <textarea
+              class="form-control"
+              id="listDescription"
+              rows="5"
+              v-model.trim="listDescription"
+          ></textarea>
+        </div>
         <p v-if="!formIsValid">Please fix the above errors and submit again.</p>
-        <base-button>Create list</base-button>
+        <add-a-movie-bar
+            @on-cancel="backToLists"
+            @on-submit="getSelectedMovies"
+        ></add-a-movie-bar>
       </form>
-    </base-card>
   </section>
 </template>
 

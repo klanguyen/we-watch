@@ -185,23 +185,45 @@ export default {
             description: payload.listDescription,
             isPublic: payload.isPublic,
             createdByUserEmail: auth.currentUser.email,
-            movies: []
+            movies: payload.selectedMovieIds
         };
 
+        let movies = payload.selectedMovies;
+
         // add to lists collection
-        const newListDocRef = await addDoc(collection(db, 'MovieLists'), newListData);
+        await addDoc(collection(db, 'MovieLists'), newListData)
+                .then(response => {
+                    console.log('Added list successfully!', response.id)
 
-        // add list id to user's lists array
-        const usersColRef = collection(db, 'WeWatchUsers');
-        const q = query(usersColRef, where('email', '==', context.rootGetters.email));
+                    // add list id to user's lists array
+                    const usersColRef = collection(db, 'WeWatchUsers');
+                    const q = query(usersColRef, where('email', '==', context.rootGetters.email));
 
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((userDoc) => {
-            // add new list id to movieLists array
-            updateDoc(doc(db, 'WeWatchUsers', userDoc.id), {
-                movieLists: arrayUnion(newListDocRef.id)
-            })
-        });
+                    getDocs(q).then(querySnapshot => {
+                        querySnapshot.forEach((userDoc) => {
+                            // add new list id to movieLists array
+                            updateDoc(doc(db, 'WeWatchUsers', userDoc.id), {
+                                movieLists: arrayUnion(response.id)
+                            })
+                        });
+                    });
+
+                    // add movies to the list
+                    movies.forEach(movie => {
+                        setDoc(doc(collection(db, 'MovieLists', response.id, 'Movies')), movie)
+                            .then(r => {
+                                console.log('Added movie successfully!');
+                            })
+                            .catch(err => {
+                                console.log('Failed added movie', err);
+                            });
+                    });
+
+                })
+                .catch(err => {
+                    console.error('Failed added list', err);
+                });
+
     },
 
     async fetchLists(context) {
