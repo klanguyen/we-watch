@@ -228,6 +228,86 @@ export default {
 
     },
 
+    async editList(context, payload) {
+        // first, update the list document
+        const docRef = doc(db, 'MovieLists', payload.listId);
+        let updatedMovieData = {
+            title: payload.listTitle,
+            description: payload.listDescription,
+            isPublic: payload.isPublic,
+            movies: payload.selectedMovieIds
+        };
+        let moviesList = payload.selectedMovies;
+
+        await updateDoc(docRef, updatedMovieData)
+            .then(response => {
+                console.log('Successfully updated list doc');
+                // then, update the Movies collection in user's doc:
+                // first, retrieve all Movies docs
+                const moviesColRef = collection(db, 'MovieLists', payload.listId, 'Movies');
+                getDocs(moviesColRef)
+                    .then(querySnapshot => {
+                        // then, delete all Movies doc
+                        querySnapshot.forEach(movieDoc => {
+                            deleteDoc(doc(db, 'MovieLists', payload.listId, 'Movies', movieDoc.id));
+                        })
+                        // finally add movie docs to the Movies collection
+                        if(moviesList.length > 0) {
+                            moviesList.forEach(movie => {
+                                setDoc(doc(collection(db, 'MovieLists', payload.listId, 'Movies')), movie)
+                                    .then(r => {
+                                        console.log('Added movie successfully!');
+                                    })
+                                    .catch(err => {
+                                        console.log('Failed added movie', err);
+                                    });
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Failed retrieving movies docs', err);
+                    });
+            })
+            .catch(err => {
+                console.error('Failed to update the list', err);
+            });
+    },
+
+    async deleteList(context, payload) {
+        // first, delete from MovieLists collection
+        const docRef = doc(db, 'MovieLists', payload);
+        await deleteDoc(docRef)
+            .then(response => {
+                console.log('Successfully delete!', response);
+
+                // then, delete record from WeWatchUsers > user doc > movieLists array
+                const usersColRef = collection(db, 'WeWatchUsers');
+                const q = query(usersColRef, where('email', '==', context.rootGetters.email));
+
+                getDocs(q)
+                    .then(querySnapshot => {
+                        querySnapshot.forEach((userDoc) => {
+                            // delete list id from movieLists array
+                            updateDoc(doc(db, 'WeWatchUsers', userDoc.id), {
+                                movieLists: arrayRemove(payload)
+                            })
+                                .then(response => {
+                                    console.log('Successfully deleted from user\'s movieLists array');
+                                })
+                                .catch(err => {
+                                    console.error('Failed to remove from user\'s records', err);
+                                })
+                        });
+                    })
+                    .catch(err => {
+                        console.error('Failed to find user\'s records', err);
+                    })
+            })
+            .catch(err => {
+                console.error('Failed to delete the list', err);
+            });
+    },
+
     async fetchLists(context) {
         context.commit('setLists', []);
         const listsColRef = collection(db, 'MovieLists');
@@ -299,26 +379,21 @@ export default {
 
         if(docSnap.exists()) {
             theList = docSnap.data()
+            context.commit('setTheListData', theList);
         }
 
         const moviesColRef = collection(db, 'MovieLists', payload, 'Movies');
-        await getDocs(moviesColRef)
-            .then(results => {
-                if(!results.empty) {
-                    results.forEach(movieDoc => {
-                        let movieData = movieDoc.data();
-                        theListMovies.push(movieData);
-                    })
-                } else {
-                    theListMovies = [];
-                }
-            }).catch(err => {
-                console.error('Error getting movies in the list', err);
-            })
-
-        context.commit("setTheList", {
-            theList: theList,
-            theListMovies: theListMovies
+        onSnapshot(moviesColRef, (moviesColRef) => {
+            if(!moviesColRef.empty) {
+                moviesColRef.forEach(movieDoc => {
+                    let movieData = movieDoc.data();
+                    theListMovies.push(movieData);
+                })
+            } else {
+                theListMovies = [];
+            }
+            context.commit("setTheListMovies", theListMovies);
         })
+
     }
 }

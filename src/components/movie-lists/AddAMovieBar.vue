@@ -1,15 +1,28 @@
 <script setup>
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {debounce} from "@/./custom-objects/Utils.js"
 import TmdbAPI from "@/services/TmdbAPI.js"
+import {useRoute} from "vue-router";
 
-const emit = defineEmits(['onSubmit', 'onCancel'])
+const route = useRoute();
+const emit = defineEmits(['onSubmit', 'onCancel', 'onDelete', 'onViewList'])
+const props = defineProps({
+  movies: {
+    type: Array,
+    required: false,
+    default: []
+  },
+})
 
 const searchString = ref('');
 const results = ref([]);
 const selectedMovies = ref([]);
 const isAlerting = ref(false);
 const alertedMovieName = ref('');
+
+const isEditing = computed(() => {
+  return route.name === 'EditList';
+})
 
 function selectMovie(movie) {
   if(selectedMovies.value.filter(obj => obj.id === movie.id).length > 0) {
@@ -44,6 +57,13 @@ function showAlert() {
   isAlerting.value = true;
 }
 
+function getMoviesInTheList() {
+  if(props.movies.length > 0) {
+    selectedMovies.value = props.movies;
+  }
+}
+
+getMoviesInTheList();
 watch(searchString, debounce(() => {
   search();
 }), 1000)
@@ -78,13 +98,33 @@ watch(searchString, debounce(() => {
         </div>
       </div>
       <div class="list-actions col-4">
-        <base-button
-            mode="outline"
+        <button
+            v-if="isEditing"
+            class="btn btn-danger"
+            @click="$emit('onDelete')"
+        >
+          Delete
+        </button>
+        <button
+            v-if="isEditing"
+            class="btn btn-outline-info"
+            @click="$emit('onViewList')"
+        >
+          View List
+        </button>
+        <button
+            v-else
+            class="btn btn-outline-info"
             @click="$emit('onCancel')"
         >
           Cancel
-        </base-button>
-        <base-button @click="$emit('onSubmit', selectedMovies)">Save list</base-button>
+        </button>
+        <button
+            class="btn btn-primary"
+            @click="$emit('onSubmit', selectedMovies)"
+        >
+          Save list
+        </button>
       </div>
     </div>
     <div v-if="results.length && searchString !== ''"

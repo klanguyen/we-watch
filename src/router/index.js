@@ -12,6 +12,7 @@ import WatchList from "@/views/user/WatchList.vue";
 import GottaWatchList from "@/views/user/GottaWatchList.vue";
 import PublicLists from "@/views/discover/PublicLists.vue";
 import ListDetails from "@/views/list/ListDetails.vue";
+import EditList from "@/views/list/EditList.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +39,7 @@ const router = createRouter({
     },
     {
       path: '/new-list',
+      name: 'CreateList',
       component: CreateList,
       meta: {
         requiresAuth: true
@@ -63,6 +65,15 @@ const router = createRouter({
       path: '/list/:listId',
       props: true,
       component: ListDetails
+    },
+    {
+      path: '/list/:listId/edit',
+      name: 'EditList',
+      props: true,
+      component: EditList,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/movie/:movieId',

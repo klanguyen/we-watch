@@ -2,18 +2,21 @@
 import {computed, ref} from "vue";
 import {useStore} from "vuex";
 import MovieItem from "@/components/movie/MovieItem.vue";
-import BaseSpinner from "@/components/ui/BaseSpinner.vue";
+import {auth} from "@/firebase/init.js";
+import {useRouter} from "vue-router";
 
 const store = useStore();
+const router = useRouter();
 const props = defineProps(['listId']);
 const isLoading = ref(false);
 const error = ref(null);
 const theList = computed(() => {
   return store.getters["movieLists/theList"];
-})
+});
 const moviesInTheList = computed(() => {
   return store.getters["movieLists/theListMovies"];
-})
+});
+
 const listStatus = computed(() => {
   return theList.value.isPublic ? 'Public' : 'Private';
 })
@@ -23,6 +26,9 @@ const hasMovies = computed(() => {
 const listIsLoading = computed(() => {
   isLoading.value = true;
   return theList.value === null;
+})
+const isCreator = computed(() => {
+  return auth.currentUser.email === theList.value.createdByUserEmail;
 })
 
 async function loadList() {
@@ -37,6 +43,10 @@ async function loadList() {
 
 function handleError() {
   error.value = null;
+}
+
+function editThisList() {
+  router.push({ name: 'EditList'});
 }
 
 loadList();
@@ -61,7 +71,14 @@ loadList();
       <h1>{{theList.title}}</h1>
       <p>{{theList.description}}</p>
       <p>Created by: {{theList.createdByUserEmail}}</p>
-      <span>{{listStatus}}</span>
+      <p>{{listStatus}}</p>
+      <button
+          v-if="isCreator"
+          class="btn btn-info"
+          @click="editThisList"
+      >
+        Edit or delete this list
+      </button>
       <base-card
           v-if="hasMovies"
           title="Movies"

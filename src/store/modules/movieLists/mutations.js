@@ -9,6 +9,12 @@ export default {
         state.theList = payload.theList;
         state.theListMovies = payload.theListMovies
     },
+    setTheListData(state, payload) {
+        state.theList = payload;
+    },
+    setTheListMovies(state, payload) {
+        state.theListMovies = payload
+    },
     addMovieToTheList(state, payload) {
         state.theListMovies.push(payload);
     },

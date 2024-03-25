@@ -1,40 +1,51 @@
 <script setup>
-import {ref} from 'vue';
+import {computed, ref} from 'vue';
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
 import AddAMovieBar from "@/components/movie-lists/AddAMovieBar.vue";
 
 const store = useStore();
 const router = useRouter();
-
+const props = defineProps(['listId']);
+const isLoading = ref(false);
+const error = ref(null);
 const listTitle = ref('');
 const listDescription = ref('');
 const isPublic = ref(true);
 const formIsValid = ref(true);
 const selectedMovies = ref([]);
 const selectedMoviesId = ref([]);
+const theList = ref(null);
+const moviesInTheList = ref(null);
 
-function backToLists() {
-  router.replace('/user/lists');
+
+function viewList() {
+  router.replace('/list/' + props.listId);
+}
+
+function deleteList() {
+  store.dispatch('movieLists/deleteList', props.listId);
+  router.replace('user/lists');
 }
 
 function validateForm() {
   formIsValid.value = !(listTitle.value === '' || listDescription.value === '');
 }
 
-function submitForm() {
+function submitEditForm() {
   console.log('Submitting..');
   validateForm();
 
   if(formIsValid.value) {
-    store.dispatch('movieLists/createList', {
+    store.dispatch('movieLists/editList', {
+      listId: props.listId,
       listTitle: listTitle.value,
       listDescription: listDescription.value,
       isPublic: isPublic.value,
       selectedMovies: selectedMovies.value,
       selectedMovieIds: selectedMoviesId.value
     });
-    router.replace('/user/my-lists');
+    router.replace('/list/' + props.listId);
   }
 }
 
@@ -46,12 +57,32 @@ function getSelectedMovies(movies) {
     });
   }
 }
+
+async function loadList() {
+  isLoading.value = true;
+  try {
+    await store.dispatch('movieLists/fetchSingleList', props.listId);
+  } catch(e) {
+    error.value = e.message || 'Something failed';
+  }
+  isLoading.value = false;
+
+
+  theList.value = store.getters["movieLists/theList"];
+  moviesInTheList.value = store.getters["movieLists/theListMovies"];
+  listTitle.value = theList.value.title;
+  listDescription.value = theList.value.description;
+  isPublic.value = theList.value.isPublic;
+}
+
+loadList();
 </script>
 
 <template>
   <section class="container">
-      <h2>New list</h2>
-      <form @submit.prevent="submitForm">
+      <h2>Edit list</h2>
+      <base-spinner v-if="isLoading"></base-spinner>
+      <form v-else @submit.prevent="submitEditForm">
         <div>
           <label for="listTitle">List Title</label>
           <input
@@ -82,8 +113,10 @@ function getSelectedMovies(movies) {
         </div>
         <p v-if="!formIsValid">Please fix the above errors and submit again.</p>
         <add-a-movie-bar
-            @on-cancel="backToLists"
+            :movies="moviesInTheList"
+            @on-view-list="viewList"
             @on-submit="getSelectedMovies"
+            @on-delete="deleteList"
         ></add-a-movie-bar>
       </form>
   </section>
