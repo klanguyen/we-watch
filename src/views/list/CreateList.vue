@@ -34,7 +34,7 @@ function submitForm() {
       selectedMovies: selectedMovies.value,
       selectedMovieIds: selectedMoviesId.value
     });
-    router.replace('/user/my-lists');
+    router.replace('/user/lists');
   }
 }
 
