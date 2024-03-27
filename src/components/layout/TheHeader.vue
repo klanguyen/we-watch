@@ -1,95 +1,62 @@
 <script setup>
-import { computed } from 'vue';
+import {computed, ref} from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
 const store = useStore();
 const router = useRouter();
+const showDropdown = ref(false);
 
 const isLoggedIn = computed(() => {
   return store.getters.isAuthenticated;
 })
 
 function logout() {
+  showDropdown.value = false
   store.dispatch('logout');
   router.replace('/');
+}
+
+function toPage(path) {
+  router.push(path);
 }
 </script>
 
 <template>
-  <header>
-    <nav>
-      <h1><router-link to="/">WeWatch</router-link></h1>
-      <ul>
-        <li v-if="isLoggedIn"><router-link to="/dashboard">Dashboard</router-link></li>
-        <li v-else>
-          <router-link to="/auth">Login</router-link>
-        </li>
-        <li v-if="isLoggedIn">
-          <base-button @click="logout">Logout</base-button>
-        </li>
-      </ul>
-    </nav>
+  <!-- header -->
+  <header class="w-full sticky top-0 py-4 px-6 flex items-center justify-between bg-gray-100">
+    <div class="flex items-center">
+      <button class="rounded-full bg-gray-400 w-8 h-8 text-gray-950 opacity-45 hover:opacity-100 mr-3" @click="router.back()">
+        <font-awesome-icon
+            :icon="['fas', 'chevron-left']"/>
+      </button>
+      <button class="rounded-full bg-gray-400 w-8 h-8 text-gray-950 opacity-45 hover:opacity-100" @click="router.forward()">
+        <font-awesome-icon
+            :icon="['fas', 'chevron-right']"/>
+      </button>
+    </div>
+    <div v-if="isLoggedIn" class="relative">
+      <button @click="showDropdown = !showDropdown" class="bg-gray-300 rounded-full py-1 px-2 flex items-center">
+        <img src="https://placehold.it/200x200" class="rounded-full h-6 w-6 mr-2" />
+        <span class="text-gray-950 font-semibold text-xs mr-2">Kayla Nguyen</span>
+        <font-awesome-icon
+            :icon="['fas', (showDropdown ? 'chevron-up' : 'chevron-down')]"
+            size="xs"
+        />
+      </button>
+      <div v-if="showDropdown" class="absolute bg-gray-300 w-full rounded mt-1 shadow">
+        <button @click="showDropdown = false" class="focus:outline-none w-full rounded text-sm py-2 text-gray-500 hover:text-gray-950 hover:bg-gray-400">Account</button>
+        <button @click="logout" class="focus:outline-none w-full rounded text-sm py-2 text-gray-500 hover:text-gray-950 hover:bg-gray-400">Log Out</button>
+      </div>
+    </div>
+    <div v-else class="relative flex items-center">
+      <router-link to="/signup" class="py-2 mr-5 text-gray-500 hover:text-gray-950 hover:scale-105">
+        Sign up
+      </router-link>
+      <button class="bg-gray-950 text-gray-50 rounded-full py-2 px-5 flex justify-center hover:scale-105" @click="toPage('/login')">Log in</button>
+    </div>
   </header>
 </template>
 
 <style scoped>
-header {
-  width: 100%;
-  height: 5rem;
-  background-color: #3d008d;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-header a {
-  text-decoration: none;
-  color: #f391e3;
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
-  border: 1px solid transparent;
-}
-
-a:active,
-a:hover,
-a.router-link-active {
-  border: 1px solid #f391e3;
-}
-
-h1 {
-  margin: 0;
-}
-
-h1 a {
-  color: white;
-  margin: 0;
-}
-
-h1 a:hover,
-h1 a:active,
-h1 a.router-link-active {
-  border-color: transparent;
-}
-
-header nav {
-  width: 90%;
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-header ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-li {
-  margin: 0 0.5rem;
-}
 </style>

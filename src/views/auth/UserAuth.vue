@@ -29,6 +29,10 @@ const switchModeButtonCaption = computed(() => {
   return formValues.value.mode === 'login' ? 'Signup instead' : 'Login instead';
 })
 
+function checkRoute() {
+  formValues.value.mode = route.name;
+}
+
 async function submitForm() {
   formValues.value.formIsValid = true;
   if (
@@ -54,8 +58,8 @@ async function submitForm() {
     } else {
       await store.dispatch('signup', actionPayload);
     }
-    const redirectUrl = '/' + (route.query.redirect || 'dashboard');
-    await router.replace(redirectUrl);
+    const redirectUrl = '/' + (route.query.redirect || '');
+    await router.push(redirectUrl);
   } catch(err) {
     // TODO: fix this to show error on dialog
     pageValues.value.error = err.message || 'Failed to authenticate, try later';
@@ -76,6 +80,7 @@ function handleError() {
   pageValues.value.error = '';
 }
 
+checkRoute();
 </script>
 
 <template>

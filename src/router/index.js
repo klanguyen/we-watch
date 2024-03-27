@@ -31,7 +31,16 @@ const router = createRouter({
       }
     },
     {
-      path: '/auth',
+      path: '/login',
+      name: 'login',
+      component: UserAuth,
+      meta: {
+        requiresUnauth: true
+      }
+    },
+    {
+      path: '/signup',
+      name: 'signup',
       component: UserAuth,
       meta: {
         requiresUnauth: true
@@ -103,9 +112,9 @@ const router = createRouter({
 
 router.beforeEach(function(to, _, next){
   if(to.meta.requiresAuth && !store.getters.isAuthenticated) {
-    next('/auth');
+    next('/login');
   } else if (to.meta.requiresUnauth && store.getters.isAuthenticated) {
-    next('/dashboard');
+    next('/');
   } else {
     next();
   }

@@ -15,7 +15,8 @@ import {fab} from '@fortawesome/free-brands-svg-icons'
 
 library.add(fas, far, fab)
 
-import TheHeader from './components/layout/TheHeader.vue';
+import SideBarNav from './components/layout/SidebarNav.vue';
+import TheHeader from "@/components/layout/TheHeader.vue";
 import TheFooter from './components/layout/TheFooter.vue';
 import BaseButton from './components/ui/BaseButton.vue';
 import BaseCard from './components/ui/BaseCard.vue';
@@ -31,6 +32,7 @@ app.use(router)
 app.use(store)
 
 app.component('the-header', TheHeader);
+app.component('side-bar-nav', SideBarNav);
 app.component('the-footer', TheFooter);
 app.component('base-button', BaseButton);
 app.component('base-card', BaseCard);
