@@ -16,7 +16,7 @@ const isLoggedIn = computed(() => {
 })
 
 const redirectLink = computed(() => {
-  return '/auth?redirect=movie/' + props.movieId;
+  return '/login?redirect=movie/' + props.movieId;
 })
 
 function addWatchedMovie() {

@@ -1,4 +1,5 @@
 import API from './API.js';
+import {formatDate} from "@/custom-objects/Utils.js";
 
 export default {
     search(searchString) {
@@ -16,7 +17,7 @@ export default {
     },
     getPosterImageUrl(posterPath) {
         let baseImgUrl = 'https://image.tmdb.org/t/p/';
-        return baseImgUrl.concat('original', posterPath);
+        return baseImgUrl.concat('w780', posterPath);
     },
     getGenreName(idList) {
         // first, get the official genres list
@@ -52,5 +53,71 @@ export default {
                         console.log(response.data);
                         return response.data
                     });
+    },
+    fetchPopularMovies() {
+        let config = {
+            params: {
+                api_key: import.meta.env.VITE_TMDB_API_KEY,
+                language: 'en-US',
+                page: 1
+            }
+        };
+        return API().get(`/movie/popular`, config)
+            .then(response => {
+                return response.data
+            });
+    },
+    fetchNowPlayingMovies() {
+        let config = {
+            params: {
+                api_key: import.meta.env.VITE_TMDB_API_KEY,
+                language: 'en-US',
+                page: 1
+            }
+        };
+        return API().get(`/movie/now_playing`, config)
+            .then(response => {
+                return response.data
+            });
+    },
+    fetchTopRatedMovies() {
+        let config = {
+            params: {
+                api_key: import.meta.env.VITE_TMDB_API_KEY,
+                language: 'en-US',
+                page: 1
+            }
+        };
+        return API().get(`/movie/top_rated`, config)
+            .then(response => {
+                return response.data
+            });
+    },
+    fetchUpcomingMovies() {
+        const today = new Date();
+        const neededDate = new Date();
+        const month = neededDate.getMonth();
+        neededDate.setMonth(neededDate.getMonth() + 3);
+        while (neededDate.getMonth() === month) {
+            neededDate.setDate(neededDate.getDate() - 1);
+        }
+        let config = {
+            params: {
+                api_key: import.meta.env.VITE_TMDB_API_KEY,
+                include_adult: false,
+                include_video: false,
+                language: 'en-US',
+                page: 1,
+                with_original_language: 'en',
+                'primary_release_date.gte': formatDate(today),
+                'primary_release_date.lte': formatDate(neededDate),
+                sort_by: 'popularity.desc',
+                with_release_type: '2|3'
+            }
+        };
+        return API().get(`/discover/movie`, config)
+            .then(response => {
+                return response.data
+            });
     }
 }
