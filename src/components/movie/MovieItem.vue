@@ -14,9 +14,8 @@ const props = defineProps({
     required: true
   }
 })
-
 function toDetailsPage(id) {
-  router.replace(`/movie/${id}`);
+  router.push(`/movie/${id}`);
 }
 
 onMounted(() => {
@@ -41,7 +40,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-64" @click="toDetailsPage(props.movie.id)">
+  <div class="w-64 mb-5 mr-4" @click="toDetailsPage(props.movie.id)">
     <div class="bg-gray-300 w-full h-auto p-4 rounded-lg shadow-md">
       <img :src="posterUrl" class="rounded-lg shadow mb-2" :alt="props.movie.title + ' poster'">
       <h1 class="text-sm font-semibold text-gray-950 tracking-wide">{{ props.movie.title }}</h1>

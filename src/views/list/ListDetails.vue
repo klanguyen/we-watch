@@ -79,13 +79,14 @@ loadList();
       >
         Edit or delete this list
       </button>
-      <base-card
+      <div
           v-if="hasMovies"
-          title="Movies"
-          v-for="item in moviesInTheList"
-      >
-        <movie-item :movie="item"></movie-item>
-      </base-card>
+          class="w-full flex flex-wrap justify-between">
+        <movie-item
+            v-for="item in moviesInTheList"
+            :movie="item"
+        ></movie-item>
+      </div>
       <base-card
           v-else
           title="Movies"

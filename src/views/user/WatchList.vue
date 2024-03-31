@@ -23,10 +23,12 @@ onMounted(() => {
     </div>
     <div
         v-else
-        v-for="(item, index) in watchedList"
-        :key="index"
+        class="w-full flex flex-wrap justify-between"
     >
-      <movie-item :movie="item"></movie-item>
+      <movie-item
+          v-for="(item, index) in watchedList"
+          :key="index"
+          :movie="item"></movie-item>
     </div>
   </div>
 </template>
