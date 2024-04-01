@@ -40,6 +40,11 @@ async function submitForm() {
       !userValues.value.email.includes('@') ||
       userValues.value.password.length < 6
   ) {
+    if(formValues.value.mode === 'signup') {
+      if(userValues.value.username === '') {
+        formValues.value.formIsValid = false;
+      }
+    }
     formValues.value.formIsValid = false;
     return;
   }
@@ -49,7 +54,8 @@ async function submitForm() {
   const actionPayload = {
     email: userValues.value.email,
     password: userValues.value.password,
-    username: userValues.value.username
+    username: userValues.value.username,
+    profileImageUrl: `https://api.dicebear.com/8.x/notionists-neutral/svg?seed=${userValues.value.username}`
   };
 
   try {

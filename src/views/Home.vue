@@ -1,14 +1,26 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import TmdbAPI from "@/services/TmdbAPI.js";
-import {formatDate} from "@/custom-objects/Utils.js";
 import MovieItem from "@/components/movie/MovieItem.vue";
+import {mapState, useStore} from "vuex";
 
+const store = useStore();
 const isLoading = ref(false);
 const popularMovies = ref([]);
 const nowPlayingMovies = ref([]);
 const topRatedMovies = ref([]);
 const upcomingMovies = ref([]);
+
+const isLoggedIn = computed(() => {
+  return store.getters.isAuthenticated;
+});
+
+const currentUser = reactive({
+  userId: computed(() => { return store.getters.userId}),
+  email: computed(() => { return store.getters.email}),
+  username: computed(() => { return store.getters.username}),
+  profileImageUrl: computed(() => { return store.getters.profileImageUrl})
+});
 
 onMounted(() => {
   TmdbAPI.fetchPopularMovies()
@@ -44,7 +56,6 @@ onMounted(() => {
   TmdbAPI.fetchUpcomingMovies()
       .then(response => {
         if(response.total_results > 0) {
-          console.log(response.results);
           (response.results).forEach(result => {
             upcomingMovies.value.push(result);
           });
@@ -122,9 +133,9 @@ onMounted(() => {
       </div>
     </div>
 
-    <div class="px-6 py-3">
+    <div v-if="isLoggedIn" class="px-6 py-3">
       <div class="pl-2 mb-3">
-        <h2 class="text-2xl font-semibold text-gray-950 tracking-wider hover:underline cursor-pointer">Made for Kayla Nguyen</h2>
+        <h2 class="text-2xl font-semibold text-gray-950 tracking-wider hover:underline cursor-pointer">Made for {{ currentUser.username }}</h2>
         <h3 class="text-sm text-gray-950">Get better recommendations the more you watch.</h3>
       </div>
       <div class="w-full flex flex-wrap justify-between">

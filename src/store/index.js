@@ -11,7 +11,9 @@ const store = createStore({
     state() {
         return {
             userId: null,
-            email: null
+            email: null,
+            username: null,
+            profileImageUrl: null
         };
     },
     getters: {
@@ -20,12 +22,20 @@ const store = createStore({
         },
         email(state) {
             return state.email;
+        },
+        username(state) {
+            return state.username;
+        },
+        profileImageUrl(state) {
+            return state.profileImageUrl;
         }
     },
     mutations: {
         setCurrentUser(state, payload) {
             state.userId = payload.userId;
             state.email = payload.email;
+            state.username = payload.username;
+            state.profileImageUrl = payload.profileImageUrl
         },
     }
 });

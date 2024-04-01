@@ -1,7 +1,7 @@
 let timer;
 import { db, auth } from '@/firebase/init.js';
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut} from 'firebase/auth'
-import { collection, doc, addDoc, setDoc } from 'firebase/firestore';
+import {collection, doc, addDoc, setDoc, query, where, getDocs, updateDoc, arrayRemove} from 'firebase/firestore';
 
 export default {
     async login(context, payload) {
@@ -11,17 +11,21 @@ export default {
                 context.dispatch('saveTokenInfoInLocal', response.user);
                 context.commit('setUser', response.user.accessToken);
                 context.commit('setIsAuthenticated', true);
-                context.commit('setCurrentUser', {
-                    userId: response.user.uid,
+
+                // grab user's info from WeWatchUsers collection
+                context.dispatch('setUserProfileFromFirebase', {
+                    uid: response.user.uid,
                     email: response.user.email
-                }, {root: true})
+                });
             })
             .catch((e) => {
                 context.commit('setUser', null);
                 context.commit('setIsAuthenticated', false);
                 context.commit('setCurrentUser', {
                     userID: null,
-                    email: null
+                    email: null,
+                    username: null,
+                    profileImageUrl: null
                 }, {root: true})
                 console.error('Error logging in', e);
             })
@@ -31,24 +35,31 @@ export default {
         await createUserWithEmailAndPassword(auth, payload.email, payload.password)
             .then(response => {
                 console.log('signing up...');
+                // save token info to local
                 context.dispatch('saveTokenInfoInLocal', response.user);
                 context.commit('setUser', response.user.accessToken);
                 context.commit('setIsAuthenticated', true);
-                context.commit('setCurrentUser', {
-                    userId: response.user.uid,
-                    email: response.user.email
-                }, {root: true});
                 context.dispatch('addUserDataToFireBase', payload)
+                    .then(r => {
+                        // grab user's info from WeWatchUsers collection
+                        context.dispatch('setUserProfileFromFirebase', {
+                            uid: response.user.uid,
+                            email: response.user.email
+                        });
+                    })
                     .catch((e) => {
                         console.error('Error creating user document', e);
                 });
+
             })
             .catch((e) => {
                 context.commit('setUser', null);
                 context.commit('setIsAuthenticated', false);
                 context.commit('setCurrentUser', {
                     userId: null,
-                    email: null
+                    email: null,
+                    username: null,
+                    profileImageUrl: null
                 }, {root: true})
                 console.error('Error creating user', e);
             })
@@ -61,6 +72,7 @@ export default {
         const dataObj = {
             username: payload.username,
             email: payload.email,
+            profileImageUrl: payload.profileImageUrl,
             gottaWatch: [],
             watched: [],
             movieLists: []
@@ -89,6 +101,7 @@ export default {
                 console.log('signing out...');
                 localStorage.removeItem('token');
                 localStorage.removeItem('userId');
+                localStorage.removeItem('userEmail');
                 localStorage.removeItem('tokenExpiration');
 
                 clearTimeout(timer);
@@ -97,7 +110,9 @@ export default {
                 context.commit('setIsAuthenticated', false);
                 context.commit('setCurrentUser', {
                     userId: null,
-                    email: null
+                    email: null,
+                    username: null,
+                    profileImageUrl: null
                 }, {root: true})
             })
             .catch(() => {
@@ -142,10 +157,10 @@ export default {
 
         if(token && userId && userEmail) {
             context.commit('setUser', token);
-            context.commit('setCurrentUser', {
-                userId: userId,
+            context.dispatch('setUserProfileFromFirebase', {
+                uid: userId,
                 email: userEmail
-            }, {root: true})
+            });
             context.commit('setIsAuthenticated', true);
         }
     },
@@ -154,5 +169,29 @@ export default {
         console.log('Session expired. Auto logging out...');
         context.dispatch('logout');
         context.commit('setAutoLogout');
+    },
+
+    setUserProfileFromFirebase(context, payload) {
+        console.log('Setting user profile from firebase...');
+        const usersColRef = collection(db, 'WeWatchUsers');
+        const q = query(usersColRef, where('email', '==', payload.email));
+
+        let userInfo = null;
+
+        getDocs(q)
+            .then(querySnapshot => {
+                querySnapshot.forEach((userDoc) => {
+                    userInfo = userDoc.data();
+                    context.commit('setCurrentUser', {
+                        userId: payload.uid,
+                        email: payload.email,
+                        username: userInfo.username,
+                        profileImageUrl: userInfo.profileImageUrl
+                    }, {root: true});
+                });
+            })
+            .catch(err => {
+                console.error('Failed to set user\'s records', err);
+            });
     }
 };

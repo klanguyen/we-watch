@@ -1,14 +1,27 @@
 <script setup>
-import {computed, ref} from 'vue';
-import { useStore } from 'vuex';
+import {computed, onBeforeMount, onMounted, reactive, ref} from 'vue';
+import {mapState, useStore} from 'vuex';
 import { useRouter } from 'vue-router';
 
 const store = useStore();
 const router = useRouter();
+const isLoading = ref(false);
+const error = ref(null);
 const showDropdown = ref(false);
+const currentUser = reactive({
+  userId: computed(() => { return store.getters.userId}),
+  email: computed(() => { return store.getters.email}),
+  username: computed(() => { return store.getters.username}),
+  profileImageUrl: computed(() => { return store.getters.profileImageUrl})
+});
 
 const isLoggedIn = computed(() => {
   return store.getters.isAuthenticated;
+})
+
+const headerIsLoading = computed(() => {
+  isLoading.value = true;
+  return currentUser.value === null;
 })
 
 function logout() {
@@ -20,11 +33,26 @@ function logout() {
 function toPage(path) {
   router.push(path);
 }
+
+function handleError() {
+  error.value = null;
+}
 </script>
 
 <template>
+  <base-dialog
+      :show="!!error"
+      title="An error occurred"
+      @close="handleError"
+  >
+    <p>{{ error }}</p>
+  </base-dialog>
+
+  <div v-if="headerIsLoading">
+    <base-spinner v-if="isLoading"></base-spinner>
+  </div>
   <!-- header -->
-  <header class="w-full sticky top-0 py-4 px-6 flex items-center justify-between bg-gray-100">
+  <header v-else class="w-full sticky top-0 py-4 px-6 flex items-center justify-between bg-gray-100">
     <div class="flex items-center">
       <button class="rounded-full bg-gray-400 w-8 h-8 text-gray-950 opacity-45 hover:opacity-100 mr-3" @click="router.back()">
         <font-awesome-icon
@@ -37,8 +65,8 @@ function toPage(path) {
     </div>
     <div v-if="isLoggedIn" class="relative">
       <button @click="showDropdown = !showDropdown" class="bg-gray-300 rounded-full py-1 px-2 flex items-center">
-        <img src="https://placehold.it/200x200" class="rounded-full h-6 w-6 mr-2" />
-        <span class="text-gray-950 font-semibold text-xs mr-2">Kayla Nguyen</span>
+        <img :src="currentUser.profileImageUrl ?? 'https://placehold.it/200x200'" class="rounded-full h-8 w-8 mr-2" />
+        <span class="text-gray-950 font-semibold text-sm mr-2">{{ currentUser.username }}</span>
         <font-awesome-icon
             :icon="['fas', (showDropdown ? 'chevron-up' : 'chevron-down')]"
             size="xs"
