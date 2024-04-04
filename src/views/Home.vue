@@ -83,7 +83,7 @@ onMounted(() => {
         <!-- TODO: adjust the amount of movies showing by size -->
         <movie-item
             v-for="(item, index) in popularMovies"
-            :key="index"
+            :key="item.id"
             :movie="item"></movie-item>
       </div>
     </div>
@@ -98,7 +98,7 @@ onMounted(() => {
         <!-- TODO: adjust the amount of movies showing by size -->
         <movie-item
             v-for="(item, index) in nowPlayingMovies"
-            :key="index"
+            :key="item.id"
             :movie="item"></movie-item>
       </div>
     </div>
@@ -113,7 +113,7 @@ onMounted(() => {
         <!-- TODO: adjust the amount of movies showing by size -->
         <movie-item
             v-for="(item, index) in topRatedMovies"
-            :key="index"
+            :key="item.id"
             :movie="item"></movie-item>
       </div>
     </div>
@@ -128,7 +128,7 @@ onMounted(() => {
         <!-- TODO: adjust the amount of movies showing by size -->
         <movie-item
             v-for="(item, index) in upcomingMovies"
-            :key="index"
+            :key="item.id"
             :movie="item"></movie-item>
       </div>
     </div>
