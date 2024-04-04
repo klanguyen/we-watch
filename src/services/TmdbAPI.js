@@ -2,16 +2,19 @@ import API from './API.js';
 import {formatDate} from "@/custom-objects/Utils.js";
 
 export default {
-    search(searchString) {
+    search(searchString, pageNum) {
         let config = {
             params: {
                 api_key: import.meta.env.VITE_TMDB_API_KEY,
                 query: searchString,
-                //language: 'en-US',
+                include_adult: false,
+                language: 'en-US',
+                page: pageNum
             }
         };
         return API().get(`/search/movie`, config)
                     .then(response => {
+                        console.log(response.data);
                         return response.data
                     });
     },
@@ -42,6 +45,18 @@ export default {
                         return resultGenres;
                     });
     },
+    getGenreOfficialLists() {
+        let config = {
+            params: {
+                api_key: import.meta.env.VITE_TMDB_API_KEY,
+                language: 'en'
+            }
+        };
+        return API().get(`/genre/movie/list`, config)
+            .then(response => {
+                return response.data.genres;
+            })
+    },
     fetchSingleMovie(id) {
         let config = {
             params: {
@@ -50,7 +65,6 @@ export default {
         };
         return API().get(`/movie/${id}`, config)
                     .then(response => {
-                        console.log(response.data);
                         return response.data
                     });
     },
