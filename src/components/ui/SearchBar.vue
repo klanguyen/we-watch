@@ -1,6 +1,7 @@
 <script setup>
-import {ref} from "vue";
 import {useRouter} from "vue-router";
+import {ref} from "vue";
+import {FwbButton, FwbInput} from "flowbite-vue";
 
 const router = useRouter();
 const searchString = ref('');
@@ -12,56 +13,23 @@ function submitForm(){
 </script>
 
 <template>
-  <form @submit.prevent="submitForm">
-    <div class="form-control">
-      <label for="search">Search keyword</label>
-      <input type="text" id="search" v-model.trim="searchString" />
-    </div>
-    <div class="actions">
-      <base-button>Search</base-button>
-    </div>
+  <form @submit.prevent="submitForm" class="w-auto mb-4">
+    <fwb-input
+        v-model.trim="searchString"
+        placeholder="Enter your search query"
+        size="lg"
+    >
+      <template #prefix>
+        <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+        </svg>
+      </template>
+      <template #suffix>
+        <fwb-button color="dark" pill>Search</fwb-button>
+      </template>
+    </fwb-input>
   </form>
 </template>
 
 <style scoped>
-.form-control {
-  margin: 0.5rem 0;
-}
-
-label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-input[type='checkbox'] + label {
-  font-weight: normal;
-  display: inline;
-  margin: 0 0 0 0.5rem;
-}
-
-input,
-textarea {
-  display: block;
-  width: 100%;
-  border: 1px solid #ccc;
-  font: inherit;
-}
-
-input:focus,
-textarea:focus {
-  background-color: #f0e6fd;
-  outline: none;
-  border-color: #3d008d;
-}
-
-input[type='checkbox'] {
-  display: inline;
-  width: auto;
-  border: none;
-}
-
-input[type='checkbox']:focus {
-  outline: #3d008d solid 1px;
-}
 </style>

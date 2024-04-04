@@ -19,53 +19,16 @@ const props = defineProps({
 </script>
 
 <template>
-  <button v-if="!props.link" :class="props.mode">
+  <button v-if="!props.link && props.mode === 'outline'" class="bg-inherit text-gray-950 rounded-full py-2 px-5 flex justify-center hover:scale-105 border border-gray-950 text-sm">
     <slot></slot>
   </button>
-  <router-link v-else :to="props.to" :class="props.mode">
+  <button v-else-if="!props.link && !props.mode" class="bg-gray-950 text-gray-50 rounded-full py-2 px-5 flex justify-center hover:scale-105">
+    <slot></slot>
+  </button>
+  <router-link v-else :to="props.to" class="py-2 mr-5 text-gray-500 hover:text-gray-950 hover:scale-105">
     <slot></slot>
   </router-link>
 </template>
 
 <style scoped>
-button,
-a {
-  text-decoration: none;
-  padding: 0.75rem 1.5rem;
-  font: inherit;
-  background-color: #3a0061;
-  border: 1px solid #3a0061;
-  color: white;
-  cursor: pointer;
-  border-radius: 30px;
-  margin-right: 0.5rem;
-  display: inline-block;
-}
-
-a:hover,
-a:active,
-button:hover,
-button:active {
-  background-color: #270041;
-  border-color: #270041;
-}
-
-.flat {
-  background-color: transparent;
-  color: #3a0061;
-  border: none;
-}
-
-.outline {
-  background-color: transparent;
-  border-color: #270041;
-  color: #270041;
-}
-
-.flat:hover,
-.flat:active,
-.outline:hover,
-.outline:active {
-  background-color: #edd2ff;
-}
 </style>

@@ -1,6 +1,6 @@
 <script setup>
-import {computed, onBeforeMount, onMounted, reactive, ref} from 'vue';
-import {mapState, useStore} from 'vuex';
+import {computed, reactive, ref} from 'vue';
+import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
 const store = useStore();
@@ -52,7 +52,7 @@ function handleError() {
     <base-spinner v-if="isLoading"></base-spinner>
   </div>
   <!-- header -->
-  <header v-else class="w-full sticky top-0 py-4 px-6 flex items-center justify-between bg-gray-100">
+  <header v-else class="w-full sticky top-0 py-4 px-6 flex items-center justify-between bg-gray-100/80 backdrop-blur-md z-20">
     <div class="flex items-center">
       <button class="rounded-full bg-gray-400 w-8 h-8 text-gray-950 opacity-45 hover:opacity-100 mr-3" @click="router.back()">
         <font-awesome-icon
@@ -78,10 +78,8 @@ function handleError() {
       </div>
     </div>
     <div v-else class="relative flex items-center">
-      <router-link to="/signup" class="py-2 mr-5 text-gray-500 hover:text-gray-950 hover:scale-105">
-        Sign up
-      </router-link>
-      <button class="bg-gray-950 text-gray-50 rounded-full py-2 px-5 flex justify-center hover:scale-105" @click="toPage('/login')">Log in</button>
+      <base-button link to="/signup">Sign up</base-button>
+      <base-button @click="toPage('/login')">Log in</base-button>
     </div>
   </header>
 </template>
