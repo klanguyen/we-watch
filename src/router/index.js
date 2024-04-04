@@ -13,6 +13,7 @@ import GottaWatchList from "@/views/user/GottaWatchList.vue";
 import PublicLists from "@/views/discover/PublicLists.vue";
 import ListDetails from "@/views/list/ListDetails.vue";
 import EditList from "@/views/list/EditList.vue";
+import Search from "@/views/Search.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -62,7 +63,13 @@ const router = createRouter({
       }
     },
     {
+      path: '/search',
+      name: 'Search',
+      component: Search
+    },
+    {
       path: '/search/:searchString',
+      name: 'SearchResults',
       props: true,
       component: SearchResults
     },

@@ -27,6 +27,16 @@ const memberPages = [
     requiredLoggedIn: true
   }
 ];
+
+const discoverPages = [
+  {
+    id: 'discover-lists',
+    name: 'Movie Lists',
+    icon: 'book-open',
+    path: '/discover/movie-lists/',
+    requiredLoggedIn: false
+  }
+];
 const isLoggedIn = computed(() => {
   return store.getters.isAuthenticated;
 })
@@ -38,9 +48,15 @@ function toPage(path) {
 
 <template>
   <!-- side nav -->
-  <aside class="w-56 bg-gray-300 h-full flex-none overflow-y-scroll">
+  <aside class="w-60 bg-gray-300 h-full flex-none overflow-y-scroll">
     <div class="p-6">
-      <h1 class="h-10 text-gray-950 logo"><router-link to="/">WeWatch</router-link></h1>
+      <h1 class="h-10 text-gray-950 logo text-2xl">
+        <router-link to="/">
+          <font-awesome-icon
+            :icon="['fas', 'glasses']"
+            class="mr-2"
+        />WeWatch</router-link>
+      </h1>
     </div>
     <div class="mx-2 mb-2">
       <button
@@ -65,6 +81,18 @@ function toPage(path) {
             class="mr-3"
         />
         <span class="font-semibold"> {{ page.name}} </span>
+      </button>
+    </div>
+    <div class="mx-5">
+      <h2 class="mb-3 pt-3 text-sm text-gray-500 tracking-widest uppercase border-t-2 border-gray-400">Discover</h2>
+      <button
+          v-for="page in discoverPages"
+          class="flex items-center justify-start opacity-45 hover:opacity-100 mb-2 py-1"
+          @click="toPage(page.path)">
+        <font-awesome-icon
+            class="mr-3 text-gray-950"
+            :icon="['fas', page.icon]" />
+        <span class="text-sm text-gray-950">{{ page.name }}</span>
       </button>
     </div>
     <div class="mx-5">
