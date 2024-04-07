@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import TmdbAPI from "@/services/TmdbAPI.js";
 import { FwbBadge } from 'flowbite-vue'
 import {useStore} from "vuex";
-import {transformVoteAvg, transformVoteCt} from "../../custom-objects/Utils.js";
+import {transformVoteAvg} from "@/custom-objects/Utils.js";
 
 const router = useRouter();
 const store = useStore();

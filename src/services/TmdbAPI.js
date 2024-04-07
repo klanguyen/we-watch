@@ -26,6 +26,14 @@ export default {
         let baseImgUrl = 'https://image.tmdb.org/t/p/';
         return baseImgUrl.concat('original', backdropPath);
     },
+    getPeopleProfileImg(profilePath) {
+        if(profilePath !== null){
+            let baseImgUrl = 'https://image.tmdb.org/t/p/';
+            return baseImgUrl.concat('original', profilePath);
+        } else {
+            return '/src/assets/img/profile-placeholder.svg';
+        }
+    },
     getGenreName(idList) {
         // first, get the official genres list
         let config = {
@@ -86,6 +94,27 @@ export default {
                         output = item.name;
                     }
                 })
+                return output;
+            })
+            .catch(err => {
+                console.error('AJAX QUERY ERROR', err);
+            });
+    },
+    getTopCast(id){
+        let config = {
+            params: {
+                api_key: import.meta.env.VITE_TMDB_API_KEY,
+            }
+        };
+        let output = [];
+        return API().get(`/movie/${id}/credits`, config)
+            .then(response => {
+                (response.data.cast).forEach(item => {
+                    if(item.order <= 9) {
+                        output.push(item);
+                    }
+                })
+                console.log(output);
                 return output;
             })
             .catch(err => {
