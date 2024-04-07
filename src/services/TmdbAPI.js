@@ -22,6 +22,10 @@ export default {
         let baseImgUrl = 'https://image.tmdb.org/t/p/';
         return baseImgUrl.concat('w780', posterPath);
     },
+    getBackdropImageUrl(backdropPath) {
+        let baseImgUrl = 'https://image.tmdb.org/t/p/';
+        return baseImgUrl.concat('original', backdropPath);
+    },
     getGenreName(idList) {
         // first, get the official genres list
         let config = {
@@ -67,6 +71,26 @@ export default {
                     .then(response => {
                         return response.data
                     });
+    },
+    getDirector(id) {
+        let config = {
+            params: {
+                api_key: import.meta.env.VITE_TMDB_API_KEY,
+            }
+        };
+        let output = '';
+        return API().get(`/movie/${id}/credits`, config)
+            .then(response => {
+                (response.data.crew).forEach(item => {
+                    if(item.job === 'Director'){
+                        output = item.name;
+                    }
+                })
+                return output;
+            })
+            .catch(err => {
+                console.error('AJAX QUERY ERROR', err);
+            });
     },
     fetchPopularMovies() {
         let config = {

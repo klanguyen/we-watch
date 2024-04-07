@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import TmdbAPI from "@/services/TmdbAPI.js";
 import { FwbBadge } from 'flowbite-vue'
 import {useStore} from "vuex";
+import {transformVoteAvg, transformVoteCt} from "../../custom-objects/Utils.js";
 
 const router = useRouter();
 const store = useStore();
@@ -52,7 +53,6 @@ onMounted(() => {
   }
 
   if(props.movie.genre_ids) {
-    console.log(props.movie.genre_ids);
     if(props.movie.genre_ids.length > 0) {
       TmdbAPI.getGenreName(props.movie.genre_ids)
           .then(response => {
@@ -107,7 +107,7 @@ onMounted(() => {
           <template #icon>
             <font-awesome-icon :icon="['fas', 'star']" class="mr-1 pb-0.5 w-4 h-4" />
           </template>
-          {{ Math.round(props.movie.vote_average*10)/10 }}
+          {{ transformVoteAvg(props.movie.vote_average) }}
         </fwb-badge>
       </div>
     </div>
