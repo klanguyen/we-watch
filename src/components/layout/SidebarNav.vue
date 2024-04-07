@@ -35,7 +35,14 @@ const discoverPages = [
     icon: 'book-open',
     path: '/discover/movie-lists/',
     requiredLoggedIn: false
-  }
+  },
+  {
+    id: 'discover-trending',
+    name: 'Trending',
+    icon: 'fire',
+    path: '/discover/trending/',
+    requiredLoggedIn: false
+  },
 ];
 const isLoggedIn = computed(() => {
   return store.getters.isAuthenticated;

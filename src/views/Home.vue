@@ -27,7 +27,7 @@ onMounted(() => {
           .then(response => {
             if(response.total_results > 0) {
               popularMovies.value = response.results;
-              popularMovies.value = popularMovies.value.slice(0, 6);
+              popularMovies.value = popularMovies.value.slice(0, 10);
             }
           })
           .catch(err => {
@@ -37,7 +37,7 @@ onMounted(() => {
       .then(response => {
         if(response.total_results > 0) {
           nowPlayingMovies.value = response.results;
-          nowPlayingMovies.value = nowPlayingMovies.value.slice(0, 6);
+          nowPlayingMovies.value = nowPlayingMovies.value.slice(0, 10);
         }
       })
       .catch(err => {
@@ -47,7 +47,7 @@ onMounted(() => {
       .then(response => {
         if(response.total_results > 0) {
           topRatedMovies.value = response.results;
-          topRatedMovies.value = topRatedMovies.value.slice(0, 6);
+          topRatedMovies.value = topRatedMovies.value.slice(0, 10);
         }
       })
       .catch(err => {
@@ -60,7 +60,7 @@ onMounted(() => {
             upcomingMovies.value.push(result);
           });
 
-          upcomingMovies.value = upcomingMovies.value.slice(0, 6);
+          upcomingMovies.value = upcomingMovies.value.slice(0, 10);
         }
       })
       .catch(err => {
@@ -78,9 +78,8 @@ onMounted(() => {
         <h2 class="text-2xl font-semibold text-gray-950 tracking-wider hover:underline cursor-pointer">Popular</h2>
         <h3 class="text-xs text-gray-950 uppercase tracking-wider hover:underline mb-3 cursor-pointer">See All</h3>
       </div>
-      <div class="w-full flex flex-wrap justify-between">
+      <div class="w-full flex flex-row flex-nowrap overflow-x-auto">
         <!-- card item -->
-        <!-- TODO: adjust the amount of movies showing by size -->
         <movie-item
             v-for="(item, index) in popularMovies"
             :key="item.id"
@@ -93,9 +92,8 @@ onMounted(() => {
         <h2 class="text-2xl font-semibold text-gray-950 tracking-wider hover:underline cursor-pointer">Now Playing</h2>
         <h3 class="text-xs text-gray-950 uppercase tracking-wider hover:underline mb-3 cursor-pointer">See All</h3>
       </div>
-      <div class="w-full flex flex-wrap justify-between">
+      <div class="w-full flex flex-row flex-nowrap overflow-x-auto">
         <!-- card item -->
-        <!-- TODO: adjust the amount of movies showing by size -->
         <movie-item
             v-for="(item, index) in nowPlayingMovies"
             :key="item.id"
@@ -108,9 +106,8 @@ onMounted(() => {
         <h2 class="text-2xl font-semibold text-gray-950 tracking-wider hover:underline cursor-pointer">Top Rated</h2>
         <h3 class="text-xs text-gray-950 uppercase tracking-wider hover:underline mb-3 cursor-pointer">See All</h3>
       </div>
-      <div class="w-full flex flex-wrap justify-between">
+      <div class="w-full flex flex-row flex-nowrap overflow-x-auto">
         <!-- card item -->
-        <!-- TODO: adjust the amount of movies showing by size -->
         <movie-item
             v-for="(item, index) in topRatedMovies"
             :key="item.id"
@@ -123,9 +120,8 @@ onMounted(() => {
         <h2 class="text-2xl font-semibold text-gray-950 tracking-wider hover:underline cursor-pointer">Upcoming</h2>
         <h3 class="text-xs text-gray-950 uppercase tracking-wider hover:underline mb-3 cursor-pointer">See All</h3>
       </div>
-      <div class="w-full flex flex-wrap justify-between">
+      <div class="w-full flex flex-row flex-nowrap overflow-x-auto">
         <!-- card item -->
-        <!-- TODO: adjust the amount of movies showing by size -->
         <movie-item
             v-for="(item, index) in upcomingMovies"
             :key="item.id"

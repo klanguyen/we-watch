@@ -212,9 +212,9 @@ getDirector();
       </div>
       <div class="px-6 py-5">
         <h2 class="text-2xl font-semibold mb-5">Similar Movies</h2>
-        <div class="grid grid-cols-5">
+        <div class="w-full flex flex-row flex-nowrap overflow-x-auto">
           <movie-item
-              v-for="movie in similarMovies.slice(0,5)"
+              v-for="movie in similarMovies.slice(0,10)"
               :key="movie.id"
               :movie="movie"></movie-item>
         </div>

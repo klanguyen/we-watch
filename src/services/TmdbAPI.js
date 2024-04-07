@@ -267,5 +267,36 @@ export default {
             .then(response => {
                 return response.data
             });
-    }
+    },
+    fetchTrendingMovies() {
+        let config = {
+            params: {
+                api_key: import.meta.env.VITE_TMDB_API_KEY,
+            }
+        }
+
+        return API().get(`/trending/movie/day`, config)
+            .then(response => {
+                return response.data.results;
+            })
+            .catch(err => {
+                console.error('AJAX QUERY ERROR', err);
+            })
+    },
+    fetchTrendingPeople() {
+        let config = {
+            params: {
+                api_key: import.meta.env.VITE_TMDB_API_KEY,
+                language: 'en-US'
+            }
+        }
+
+        return API().get(`/trending/person/day`, config)
+            .then(response => {
+                return response.data.results;
+            })
+            .catch(err => {
+                console.error('AJAX QUERY ERROR', err);
+            })
+    },
 }

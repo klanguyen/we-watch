@@ -14,6 +14,7 @@ import PublicLists from "@/views/discover/PublicLists.vue";
 import ListDetails from "@/views/list/ListDetails.vue";
 import EditList from "@/views/list/EditList.vue";
 import Search from "@/views/Search.vue";
+import Trending from "@/views/discover/Trending.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -76,6 +77,10 @@ const router = createRouter({
     {
       path: '/discover/movie-lists',
       component: PublicLists
+    },
+    {
+      path: '/discover/trending',
+      component: Trending
     },
     {
       path: '/list/:listId',

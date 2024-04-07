@@ -76,7 +76,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="group/item w-60 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-5 cursor-pointer">
+  <div class="group/item w-60 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-5 mr-5 cursor-pointer min-w-60">
     <a @click="toDetailsPage(props.movie.id)" class="relative">
       <div class="w-full h-full flex justify-end items-start opacity-0 hover:opacity-100 p-4 absolute">
         <div class="border-[1px] border-white/20 bg-black/50 backdrop-blur-md rounded-lg flex justify-center h-6 w-6 p-4 mr-1">
