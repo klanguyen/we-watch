@@ -4,7 +4,8 @@
       <side-bar-nav></side-bar-nav>
       <div class="w-full h-full bg-gray-100 relative overflow-y-scroll">
         <the-header></the-header>
-        <router-view v-slot="slotProps">
+        <!-- add :key="$route.fullPath" so the page remounted everytime the path doesn't change but the params change -->
+        <router-view :key="$route.fullPath" v-slot="slotProps">
           <component :is="slotProps.Component"></component>
         </router-view>
       </div>

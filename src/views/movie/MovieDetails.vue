@@ -1,9 +1,13 @@
 <script setup>
-import {computed, onMounted, ref} from 'vue';
+import {computed, onBeforeMount, onMounted, ref, watch} from 'vue';
 import {useStore} from "vuex";
 import TmdbAPI from "@/services/TmdbAPI.js";
 import {formatReleaseDate, transformRuntime, transformVoteAvg, transformVoteCt} from "@/custom-objects/Utils.js";
+import MovieItem from "@/components/movie/MovieItem.vue";
+import {useRoute, useRouter} from "vue-router";
 
+const router = useRouter();
+const route = useRoute();
 const store = useStore();
 const props = defineProps(['movieId']);
 
@@ -13,6 +17,8 @@ const backdropUrl = ref('');
 const director = ref('');
 const topCast = ref([]);
 const keywords = ref([]);
+const similarMovies = ref([]);
+const collection = ref([]);
 
 const isLoggedIn = computed(() => {
   return store.getters.isAuthenticated;
@@ -57,6 +63,29 @@ onMounted(() => {
         console.log(theMovie.value);
         posterUrl.value = TmdbAPI.getPosterImageUrl(theMovie.value.poster_path);
         backdropUrl.value = TmdbAPI.getBackdropImageUrl(theMovie.value.backdrop_path);
+        TmdbAPI.getRecommendations(props.movieId).then(r => {
+          r.forEach(result => {
+            similarMovies.value.push(result);
+          });
+
+          if(similarMovies.value.length <= 5 && theMovie.value.belongs_to_collection) {
+            TmdbAPI.getCollection(theMovie.value.belongs_to_collection.id)
+                .then(r => {
+                  collection.value = r;
+                  (r.parts).forEach(movie => {
+                    similarMovies.value.push(movie);
+                  });
+                })
+          }
+
+          if(similarMovies.value.length <= 5) {
+            TmdbAPI.getSimilarMovies(props.movieId).then(r => {
+              r.forEach(result => {
+                similarMovies.value.push(result);
+              })
+            })
+          }
+        })
       }).catch(err => {
         console.error('AJAX QUERY ERROR', err);
   });
@@ -73,8 +102,13 @@ onMounted(() => {
   TmdbAPI.getKeyWords(props.movieId).then(r => {
     keywords.value = r;
   });
+
   store.dispatch('movieLists/getWatchedStatus', parseInt(props.movieId));
   store.dispatch('movieLists/getGottaWatchStatus', parseInt(props.movieId));
+})
+
+watch(route.path, () => {
+  location.reload();
 })
 
 getDirector();
@@ -156,7 +190,7 @@ getDirector();
       <div class="px-6 py-5">
         <h2 class="text-2xl font-semibold mb-5">Keywords</h2>
         <ul class="flex flex-wrap">
-          <li v-for="item in keywords" class="keywords bg-gray-700 px-2 py-1 mr-2 mb-2 text-sm rounded-md hover:text-gray-50 cursor-pointer">{{ item.name }}</li>
+          <li v-for="item in keywords" class="keywords bg-gray-700 px-2 py-1 mr-2 mb-2 text-sm rounded-[3px] hover:text-gray-50 cursor-pointer">{{ item.name }}</li>
         </ul>
       </div>
       <div class="px-6 py-5">
@@ -166,7 +200,7 @@ getDirector();
             <div class="w-full flex justify-center">
               <div class="w-[9rem] h-[9rem] overflow-hidden rounded-full items-center">
                 <img v-if="!item.profileImageUrl.includes('https://')" :src="item.profileImageUrl">
-                <img v-else :src="item.profileImageUrl" class="relative -top-5 scale-110">
+                <img v-else :src="item.profileImageUrl" class="relative -top-5 scale-100">
               </div>
             </div>
             <span class="flex flex-col items-center tracking-wide">
@@ -175,6 +209,15 @@ getDirector();
             </span>
           </li>
         </ul>
+      </div>
+      <div class="px-6 py-5">
+        <h2 class="text-2xl font-semibold mb-5">Similar Movies</h2>
+        <div class="grid grid-cols-5">
+          <movie-item
+              v-for="movie in similarMovies.slice(0,5)"
+              :key="movie.id"
+              :movie="movie"></movie-item>
+        </div>
       </div>
     </section>
   </article>

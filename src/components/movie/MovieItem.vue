@@ -1,11 +1,12 @@
 <script setup>
 import {ref, onMounted, computed} from 'vue';
-import { useRouter } from 'vue-router';
+import {useRoute, useRouter} from 'vue-router';
 import TmdbAPI from "@/services/TmdbAPI.js";
 import { FwbBadge } from 'flowbite-vue'
 import {useStore} from "vuex";
 import {transformVoteAvg} from "@/custom-objects/Utils.js";
 
+const route = useRoute();
 const router = useRouter();
 const store = useStore();
 const posterUrl = ref('');
@@ -18,6 +19,7 @@ const props = defineProps({
   }
 })
 function toDetailsPage(id) {
+  // TODO: fix this bug, seems to not reload the page after router push
   router.push(`/movie/${id}`);
 }
 

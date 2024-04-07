@@ -1,5 +1,5 @@
 import API from './API.js';
-import {formatDate} from "@/custom-objects/Utils.js";
+import {formatDate, getRandomInt} from "@/custom-objects/Utils.js";
 
 export default {
     search(searchString, pageNum) {
@@ -134,6 +134,73 @@ export default {
                     }).catch(err => {
                         console.error('AJAX QUERY ERROR', err);
                     });
+    },
+    getCollection(collectionId) {
+        let config = {
+            params: {
+                api_key: import.meta.env.VITE_TMDB_API_KEY,
+            }
+        };
+        let output = [];
+        return API().get(`/collection/${collectionId}`, config)
+            .then(response => {
+                output = response.data;
+                return output;
+            }).catch(err => {
+                console.error('AJAX QUERY ERROR', err);
+            });
+    },
+    getRecommendations(id) {
+        let config = {
+            params: {
+                api_key: import.meta.env.VITE_TMDB_API_KEY,
+                language: 'en-US'
+            }
+        };
+        let output = [];
+        return API().get(`/movie/${id}/recommendations`, config)
+            .then(response => {
+                output = response.data.results;
+                return output;
+            }).catch(err => {
+                console.error('AJAX QUERY ERROR', err);
+            });
+    },
+    getSimilarMovies(id) {
+        let config = {
+            params: {
+                api_key: import.meta.env.VITE_TMDB_API_KEY,
+                language: 'en-US'
+            }
+        };
+        let output = [];
+        let num = 0
+        return API().get(`/movie/${id}/similar`, config)
+        .then(response => {
+            if(response.data.total_pages >= 500){
+                num = getRandomInt(1, 500);
+            }else {
+                num = getRandomInt(1, response.data.total_pages);
+            }
+            config = {
+                params: {
+                    api_key: import.meta.env.VITE_TMDB_API_KEY,
+                    language: 'en-US',
+                    page: num
+                }
+            };
+            return API().get(`/movie/${id}/similar`, config)
+                .then(r => {
+                    (r.data.results).forEach(result => {
+                        if(result.poster_path !== null && result.vote_average > 5) {
+                            output.push(result);
+                        }
+                    })
+                    return output;
+                })
+        }).catch(err => {
+            console.error('AJAX QUERY ERROR', err);
+        });
     },
     fetchPopularMovies() {
         let config = {
