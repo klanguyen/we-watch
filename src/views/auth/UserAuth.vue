@@ -76,8 +76,10 @@ async function submitForm() {
 
 function switchAuthMode() {
   if(formValues.value.mode === 'login') {
+    router.push('/signup');
     formValues.value.mode = 'signup';
   } else {
+    router.push('/login');
     formValues.value.mode = 'login';
   }
 }
@@ -113,7 +115,7 @@ checkRoute();
         </div>
         <p v-if="!formValues.formIsValid">Please enter a valid email and password (must be 6 characters long)</p>
         <base-button>{{ submitButtonCaption }}</base-button>
-        <base-button type="button" mode="flat" @click="switchAuthMode">{{ switchModeButtonCaption }}</base-button>
+        <base-button mode="outline" @click="switchAuthMode">{{ switchModeButtonCaption }}</base-button>
       </form>
     </base-card>
   </div>
