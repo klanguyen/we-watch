@@ -12,6 +12,7 @@ const posterUrl = ref('');
 const backdropUrl = ref('');
 const director = ref('');
 const topCast = ref([]);
+const keywords = ref([]);
 
 const isLoggedIn = computed(() => {
   return store.getters.isAuthenticated;
@@ -69,7 +70,9 @@ onMounted(() => {
       topCast.value.push(output);
     })
   });
-
+  TmdbAPI.getKeyWords(props.movieId).then(r => {
+    keywords.value = r;
+  });
   store.dispatch('movieLists/getWatchedStatus', parseInt(props.movieId));
   store.dispatch('movieLists/getGottaWatchStatus', parseInt(props.movieId));
 })
@@ -151,6 +154,12 @@ getDirector();
     </section>
     <section class="h-full bg-gray-950 text-gray-300">
       <div class="px-6 py-5">
+        <h2 class="text-2xl font-semibold mb-5">Keywords</h2>
+        <ul class="flex flex-wrap">
+          <li v-for="item in keywords" class="keywords bg-gray-700 px-2 py-1 mr-2 mb-2 text-sm rounded-md hover:text-gray-50 cursor-pointer">{{ item.name }}</li>
+        </ul>
+      </div>
+      <div class="px-6 py-5">
         <h2 class="text-2xl font-semibold mb-5">Top Cast</h2>
         <ul class="grid grid-cols-2 xl:grid-cols-5 md:grid-cols-3">
           <li v-for="(item, key) in topCast" class="flex flex-col flex-2 mr-3 mb-7">
@@ -172,5 +181,7 @@ getDirector();
 </template>
 
 <style scoped>
-
+.keywords {
+  box-shadow: inset 0 1px 0 hsla(0,0%,100%,.05);
+}
 </style>

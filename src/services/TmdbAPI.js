@@ -114,12 +114,26 @@ export default {
                         output.push(item);
                     }
                 })
-                console.log(output);
                 return output;
             })
             .catch(err => {
                 console.error('AJAX QUERY ERROR', err);
             });
+    },
+    getKeyWords(id) {
+        let config = {
+            params: {
+                api_key: import.meta.env.VITE_TMDB_API_KEY,
+            }
+        };
+        let output = [];
+        return API().get(`/movie/${id}/keywords`, config)
+                    .then(response => {
+                        output = response.data.keywords;
+                        return output;
+                    }).catch(err => {
+                        console.error('AJAX QUERY ERROR', err);
+                    });
     },
     fetchPopularMovies() {
         let config = {
