@@ -2,7 +2,10 @@
 import ListItem from '@/components/movie-lists/ListItem.vue'
 import {ref, computed} from "vue";
 import {useStore} from "vuex";
+import BaseButton from "@/components/ui/BaseButton.vue";
+import {useRouter} from "vue-router";
 
+const router = useRouter();
 const store = useStore();
 const isLoading = ref(false);
 const error = ref(null);
@@ -15,6 +18,9 @@ const publicLists = computed(() => {
 })
 const hasLists = computed(() => {
   return store.getters["movieLists/hasLists"];
+})
+const redirectLink = computed(() => {
+  return '/login?redirect=new-list/';
 })
 
 async function loadLists() {
@@ -31,11 +37,15 @@ function handleError() {
   error.value = null;
 }
 
+function toPage(path) {
+  router.push(path);
+}
+
 loadLists();
 </script>
 
 <template>
-  <div>
+  <article>
     <base-dialog
         :show="!!error"
         title="An error occurred"
@@ -43,45 +53,46 @@ loadLists();
     >
       <p>{{ error }}</p>
     </base-dialog>
-    <section>
-      <base-card>
-        <header>
-          <h2>Public lists</h2>
-        </header>
-        <base-spinner v-if="isLoading"></base-spinner>
-        <ul v-else-if="hasLists && !isLoading">
+    <section class="px-6 py-12 mb-3 bg-gray-950 text-gray-300">
+      <h1 class="text-[3em] font-semibold text-gray-50 tracking-wide mb-2">Movie Lists</h1>
+      <p>Collect, curate, and share. Lists are the perfect way to group films.</p>
+      <div
+          class="login-actions mt-2"
+          v-if="!isLoggedIn"
+      >
+        <base-button mode="outline dark">
+          <router-link :to="redirectLink">
+            Login to start your own list
+          </router-link>
+        </base-button>
+      </div>
+      <div class="actions mt-3" v-else>
+        <base-button mode="dark" @click="toPage('/new-list')">Start your own list</base-button>
+      </div>
+    </section>
+    <section class="px-6 py-3">
+      <base-spinner v-if="isLoading"></base-spinner>
+      <div v-else-if="hasLists && !isLoading">
+        <h2 class="text-2xl font-semibold text-gray-950 tracking-wide mb-4">Recently created</h2>
+        <ul class="grid grid-cols-2 gap-5">
           <list-item
               v-for="list in publicLists"
               :key="list.id"
               :list-id="list.id"
               :list-title="list.data.title"
               :list-description="list.data.description"
-              :is-public="list.data.isPublic"
+              :created-on="list.data.createdOn"
+              :movie-count="list.data.movies.length"
               :user-email="list.data.createdByUserEmail"
           ></list-item>
         </ul>
-        <div v-else>
-          <h3>There's no movie lists to discover.</h3>
-          <base-button v-if="isLoggedIn" link to="/new-list">Create a list</base-button>
-        </div>
-      </base-card>
+      </div>
+      <div v-else>
+        <h2>There's no movie lists to discover.</h2>
+      </div>
     </section>
-  </div>
+  </article>
 </template>
 
 <style scoped>
-header {
-  text-align: center;
-}
-
-ul {
-  list-style: none;
-  margin: 2rem auto;
-  padding: 0;
-  max-width: 30rem;
-}
-
-h3 {
-  text-align: center;
-}
 </style>

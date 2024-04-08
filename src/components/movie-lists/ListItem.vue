@@ -1,10 +1,15 @@
 <template>
-  <li @click="toDetailsPage(listId)">
-    <div>
-      <h3>{{ listTitle }}</h3>
-      <p>{{ listDescription }}</p>
-      <p>Made by: {{ userEmail }}</p>
-      <p>Is public: {{ isPublic }}</p>
+  <li class="w-full flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 hover:cursor-pointer" @click="toDetailsPage(listId)">
+    <img class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg" src="https://placehold.it/500x500" alt="">
+    <div class="flex flex-col justify-between p-4 leading-normal">
+      <h3 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-gray-50">{{ listTitle }}</h3>
+      <p class="text-sm text-gray-700 mb-2">
+        <span class="mr-2 font-semibold">{{ userEmail }}</span>
+        <span class="mr-2">&#8226;</span>
+        <span class="">{{ movieCount > 1 ? movieCount + ' movies' : movieCount + ' movie' }}</span>
+      </p>
+      <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ listDescription }}</p>
+      <p v-if="isPublic">Is public: {{ isPublic }}</p>
     </div>
   </li>
 </template>
@@ -18,33 +23,15 @@ const props = defineProps([
     'listDescription',
     'userEmail',
     'isPublic',
-    'listId'
+    'listId',
+    'createdOn',
+    'movieCount'
 ])
 
 function toDetailsPage(id) {
-  router.replace(`/list/${id}`);
+  router.push(`/list/${id}`);
 }
 </script>
 
 <style scoped>
-li {
-  margin: 1rem 0;
-  border: 1px solid #ccc;
-  padding: 1rem;
-}
-
-a {
-  color: #3d008d;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-a:hover,
-a:active {
-  color: #8d007a;
-}
-
-p {
-  margin: 0.5rem 0 0 0;
-}
 </style>
