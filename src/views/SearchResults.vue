@@ -13,10 +13,10 @@
       ></movie-item>
     </div>
     <div v-if="hasMorePage" class="flex justify-center mb-5">
-      <base-button mode="outline" @click="search(page)">
+      <button class="bg-inherit text-gray-950 rounded-full py-2 px-5 flex justify-center hover:scale-105 border border-gray-950 text-sm" @click="search(page)">
         Load more
         <font-awesome-icon class="ml-2 pt-[2px]" :icon="['fas', 'angles-down']" />
-      </base-button>
+      </button>
     </div>
   </section>
 </template>

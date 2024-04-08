@@ -3,7 +3,7 @@
     <img class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg" :src="thumbnailUrl" alt="">
     <div class="flex flex-col justify-between p-4 leading-normal">
       <h3 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-gray-50 pt-4">{{ listTitle }}</h3>
-      <span v-if="isPublic" class="w-fit bg-gray-300 text-gray-800 flex text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300 mb-2">{{ isPublic ? 'Public' : 'Private' }}</span>
+      <span v-if="isPublic !== undefined" class="w-fit bg-gray-300 text-gray-800 flex text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300 mb-2">{{ isPublic ? 'Public' : 'Private' }}</span>
       <p class="text-sm text-gray-700 mb-2">
         <span class="mr-2 font-semibold">{{ userEmail }}</span>
         <span class="mr-2">&#8226;</span>

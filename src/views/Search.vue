@@ -17,8 +17,6 @@ onMounted(() => {
 
           genresList.value.push(genre);
         })
-
-        console.log(genresList.value);
       });
 })
 </script>
