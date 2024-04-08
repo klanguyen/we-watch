@@ -50,9 +50,6 @@ onMounted(() => {
   store.dispatch('movieLists/getGottaWatchStatus', parseInt(props.key));
 
   posterUrl.value = TmdbAPI.getPosterImageUrl(props.movie.poster_path);
-  if(posterUrl.value === 'https://image.tmdb.org/t/p/w780null') {
-    posterUrl.value = 'https://placehold.it/500x500';
-  }
 
   if(props.movie.genre_ids) {
     if(props.movie.genre_ids.length > 0) {

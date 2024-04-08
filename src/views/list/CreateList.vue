@@ -3,6 +3,7 @@ import {ref} from 'vue';
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
 import AddAMovieBar from "@/components/movie-lists/AddAMovieBar.vue";
+import TmdbAPI from "@/services/TmdbAPI.js";
 
 const store = useStore();
 const router = useRouter();
@@ -27,12 +28,14 @@ function submitForm() {
   validateForm();
 
   if(formIsValid.value) {
+    let picUrl = TmdbAPI.getPosterImageUrl(selectedMovies.value[0].poster_path);
     store.dispatch('movieLists/createList', {
       listTitle: listTitle.value,
       listDescription: listDescription.value,
       isPublic: isPublic.value,
       selectedMovies: selectedMovies.value,
-      selectedMovieIds: selectedMoviesId.value
+      selectedMovieIds: selectedMoviesId.value,
+      thumbnailUrl: picUrl
     });
     router.replace('/user/lists');
   }

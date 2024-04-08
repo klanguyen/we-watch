@@ -19,8 +19,12 @@ export default {
                     });
     },
     getPosterImageUrl(posterPath) {
-        let baseImgUrl = 'https://image.tmdb.org/t/p/';
-        return baseImgUrl.concat('w780', posterPath);
+        if(posterPath !== null) {
+            let baseImgUrl = 'https://image.tmdb.org/t/p/';
+            return baseImgUrl.concat('w780', posterPath);
+        } else {
+            return 'https://placehold.it/500x500';
+        }
     },
     getBackdropImageUrl(backdropPath) {
         let baseImgUrl = 'https://image.tmdb.org/t/p/';

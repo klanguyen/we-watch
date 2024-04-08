@@ -66,3 +66,45 @@ export function getRandomInt(min, max) {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+export function getNumberOfDays(startDate, endDate = new Date()){
+    // A day in milliseconds
+    const aDay = 1000 * 60 * 60 * 24;
+
+    // Calculating the time difference between two timestamps
+    let difference = endDate.getTime() - startDate.getTime();
+
+    let daysDifference = Math.floor(difference/1000/60/60/24);
+    difference -= daysDifference*aDay
+
+    let hoursDifference = Math.floor(difference/1000/60/60);
+    difference -= hoursDifference*1000*60*60
+
+    let minutesDifference = Math.floor(difference/1000/60);
+    difference -= minutesDifference*1000*60
+
+    let secondsDifference = Math.floor(difference/1000);
+
+    let output = '';
+    if(daysDifference === 0) {
+        if(hoursDifference === 0){
+            if(minutesDifference === 0){
+                output = secondsDifference + ' seconds ago'
+            }else if (minutesDifference === 1){
+                output = 'a minute ago'
+            }else {
+                output = minutesDifference + ' minutes ago'
+            }
+        }else if(hoursDifference === 1){
+            output = 'an hour ago';
+        }else {
+            output = hoursDifference + ' hours ago'
+        }
+    } else if(daysDifference === 1) {
+        output = 'a day ago';
+    } else {
+        output = daysDifference + ' days ago'
+    }
+
+    return output;
+}

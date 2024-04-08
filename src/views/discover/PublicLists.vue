@@ -45,7 +45,7 @@ loadLists();
 </script>
 
 <template>
-  <article>
+  <article class="mb-[3rem]">
     <base-dialog
         :show="!!error"
         title="An error occurred"
@@ -67,7 +67,11 @@ loadLists();
         </base-button>
       </div>
       <div class="actions mt-3" v-else>
-        <base-button mode="dark" @click="toPage('/new-list')">Start your own list</base-button>
+        <base-button mode="dark">
+          <router-link to="/new-list">
+            Start your own list
+          </router-link>
+        </base-button>
       </div>
     </section>
     <section class="px-6 py-3">
@@ -82,6 +86,8 @@ loadLists();
               :list-title="list.data.title"
               :list-description="list.data.description"
               :created-on="list.data.createdOn"
+              :last-updated="list.data.lastUpdated"
+              :thumbnail-url="list.data.thumbnailUrl"
               :movie-count="list.data.movies.length"
               :user-email="list.data.createdByUserEmail"
           ></list-item>
