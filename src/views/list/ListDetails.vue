@@ -50,7 +50,6 @@ function editThisList() {
   router.push({ name: 'EditList'});
 }
 
-console.log('last updated', props.lastUpdated);
 loadList();
 </script>
 
