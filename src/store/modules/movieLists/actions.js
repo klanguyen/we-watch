@@ -185,7 +185,9 @@ export default {
             description: payload.listDescription,
             isPublic: payload.isPublic,
             createdByUserEmail: auth.currentUser.email,
-            movies: payload.selectedMovieIds
+            movies: payload.selectedMovieIds,
+            createdOn: new Date(),
+            lastUpdated: null
         };
 
         let movies = payload.selectedMovies;
@@ -235,7 +237,8 @@ export default {
             title: payload.listTitle,
             description: payload.listDescription,
             isPublic: payload.isPublic,
-            movies: payload.selectedMovieIds
+            movies: payload.selectedMovieIds,
+            lastUpdated: new Date()
         };
         let moviesList = payload.selectedMovies;
 

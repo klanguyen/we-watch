@@ -71,33 +71,18 @@ watch(searchString, debounce(() => {
 
 <template>
   <div class="add-movie-bar">
-    <div class="row">
-      <div class="mb-3 col-8">
-        <label for="search">Add a movie</label>
+    <div class="flex flex-row">
+      <div class="mb-3 flex-1 w-full">
+        <label for="search" class="block mb-1 font-medium text-gray-900 dark:text-gray-5">Add a movie</label>
         <input
             type="text"
-            class="form-control"
+            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-gray-600 focus:border-gray-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
             id="search"
             v-model.trim="searchString"
             placeholder="Enter name of movie"
         />
-        <div
-            v-if="isAlerting"
-            class="alert alert-warning alert-dismissible fade show row" role="alert"
-        >
-          <p class="col-10 mb-0"><strong>{{alertedMovieName}}</strong> is already in the list</p>
-          <p class="close mb-0 col-2 d-flex justify-content-end flex-grow-1" data-dismiss="alert" aria-label="Close">
-            <font-awesome-icon
-                :icon="['fas', 'xmark']"
-                size="lg"
-                aria-hidden="true"
-                class="action-item"
-                @click="isAlerting = false"
-            />
-          </p>
-        </div>
       </div>
-      <div class="list-actions col-4">
+      <div class="list-actions flex flex-row w-full justify-end items-end flex-1 mb-3">
         <button
             v-if="isEditing"
             class="btn btn-danger"
@@ -112,31 +97,56 @@ watch(searchString, debounce(() => {
         >
           View List
         </button>
+        <span v-else class="mr-2">
+          <button
+              class="bg-inherit text-gray-950 rounded-full py-2 px-5 flex justify-center hover:scale-105 border border-gray-950 text-sm"
+              @click="$emit('onCancel')"
+          >
+            Cancel
+          </button>
+        </span>
         <button
-            v-else
-            class="btn btn-outline-info"
-            @click="$emit('onCancel')"
-        >
-          Cancel
-        </button>
-        <button
-            class="btn btn-primary"
             @click="$emit('onSubmit', selectedMovies)"
+            class="bg-gray-950 text-gray-50 rounded-full py-2 px-5 flex justify-center hover:scale-105 pl-4"
         >
           Save list
         </button>
       </div>
     </div>
+    <div
+        v-if="isAlerting"
+        id="alert-border"
+        class="flex items-center p-4 mb-4 text-yellow-800 border-t-4 border-yellow-300 bg-yellow-50 dark:text-yellow-300 dark:bg-gray-800 dark:border-yellow-800"
+        role="alert"
+    >
+      <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+      </svg>
+      <div class="ms-3 text-sm font-medium">
+        <strong>{{alertedMovieName}}</strong> is already in the list!
+      </div>
+      <button
+          type="button"
+          class="ms-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-yellow-300 dark:hover:bg-gray-700" data-dismiss-target="#alert-border"
+          aria-label="Close"
+          @click="isAlerting = false"
+      >
+        <span class="sr-only">Dismiss</span>
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+        </svg>
+      </button>
+    </div>
     <div v-if="results.length && searchString !== ''"
         class="results-list mb-3">
       <div
-          class="result-item row"
+          class="result-item flex flex-row items-center"
           v-for="result in results"
           :key="result.id"
           @click="selectMovie(result)"
       >
-        <img class="search-img col-4" :src="getPosterUrl(result.poster_path)" />
-        <span class="col-8">
+        <img class="search-img mr-3" :src="getPosterUrl(result.poster_path)" />
+        <span class="">
           <p class="movie-name mb-0">{{ result.title }}</p>
           <span>({{parseInt(result.release_date)}})</span>
         </span>
@@ -145,14 +155,16 @@ watch(searchString, debounce(() => {
     <div class="movies-in-list" v-if="selectedMovies.length > 0">
       <div
           v-for="movie in selectedMovies"
-          class="movie-item-in-list row align-items-center"
+          class="movie-item-in-list flex flex-row items-center justify-between"
       >
-        <img :src="getPosterUrl(movie.poster_path)" class="col-3" />
-        <div class="col-6 flex-column">
-          <p class="movie-name mb-0">{{ movie.title }}</p>
-          <span>({{ parseInt(movie.release_date) }})</span>
+        <div class="flex flex-row items-center">
+          <img :src="getPosterUrl(movie.poster_path)" class="mr-3" />
+          <div class="flex flex-col">
+            <p class="movie-name mb-0">{{ movie.title }}</p>
+            <span>({{ parseInt(movie.release_date) }})</span>
+          </div>
         </div>
-        <div class="movie-item-actions col-3 d-flex justify-content-end flex-grow-1">
+        <div class="movie-item-actions flex justify-end hover:cursor-pointer hover:bg-gray-300 hover:rounded-lg py-1 px-2">
           <font-awesome-icon
               :icon="['fas', 'xmark']"
               size="lg"
@@ -174,32 +186,9 @@ watch(searchString, debounce(() => {
   position: relative;
 }
 
-.form-control {
-  margin: 0.5rem 0;
-}
-
-label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-input {
-  display: block;
-  width: 100%;
-  border: 1px solid #ccc;
-  font: inherit;
-}
-
-input:focus {
-  background-color: #f0e6fd;
-  outline: none;
-  border-color: #3d008d;
-}
-
 .results-list {
   position: absolute;
-  width: 97%;
+  width: 50%;
   background-color: #fff;
   box-shadow: 0px 0px 8px #ddd;
   border-radius: 10px;
@@ -247,11 +236,6 @@ input:focus {
 
 .movie-item-in-list .movie-name {
   font-size: 1.2em;
-}
-
-.action-item:hover {
-  color: #8d007a;
-  cursor: pointer;
 }
 
 .empty-list {
