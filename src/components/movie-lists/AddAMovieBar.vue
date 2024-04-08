@@ -85,21 +85,21 @@ watch(searchString, debounce(() => {
       <div class="list-actions flex flex-row w-full justify-end items-end flex-1 mb-3">
         <button
             v-if="isEditing"
-            class="btn btn-danger"
+            class="text-gray-50 bg-red-700 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300 rounded-full px-5 py-2.5 text-center me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
             @click="$emit('onDelete')"
         >
           Delete
         </button>
         <button
             v-if="isEditing"
-            class="btn btn-outline-info"
+            class="bg-inherit text-gray-950 rounded-full py-2.5 px-5 flex justify-center hover:scale-105 border border-gray-950 text-sm me-2"
             @click="$emit('onViewList')"
         >
           View List
         </button>
         <span v-else class="mr-2">
           <button
-              class="bg-inherit text-gray-950 rounded-full py-2 px-5 flex justify-center hover:scale-105 border border-gray-950 text-sm"
+              class="bg-inherit text-gray-950 rounded-full py-2.5 px-5 flex justify-center hover:scale-105 border border-gray-950"
               @click="$emit('onCancel')"
           >
             Cancel
@@ -107,7 +107,7 @@ watch(searchString, debounce(() => {
         </span>
         <button
             @click="$emit('onSubmit', selectedMovies)"
-            class="bg-gray-950 text-gray-50 rounded-full py-2 px-5 flex justify-center hover:scale-105 pl-4"
+            class="bg-gray-950 text-gray-50 rounded-full py-2.5 px-5 flex justify-center hover:scale-105 pl-4"
         >
           Save list
         </button>

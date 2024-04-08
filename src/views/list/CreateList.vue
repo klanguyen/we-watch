@@ -37,7 +37,7 @@ function submitForm() {
       selectedMovieIds: selectedMoviesId.value,
       thumbnailUrl: picUrl
     });
-    router.replace('/user/lists');
+    router.push('/user/lists');
   }
 }
 
