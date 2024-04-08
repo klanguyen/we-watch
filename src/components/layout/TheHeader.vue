@@ -27,11 +27,7 @@ const headerIsLoading = computed(() => {
 function logout() {
   showDropdown.value = false
   store.dispatch('logout');
-  router.replace('/');
-}
-
-function toPage(path) {
-  router.push(path);
+  router.push('/');
 }
 
 function handleError() {
@@ -79,7 +75,7 @@ function handleError() {
     </div>
     <div v-else class="relative flex items-center">
       <base-button link to="/signup">Sign up</base-button>
-      <base-button @click="toPage('/login')">Log in</base-button>
+      <base-button><router-link to="/login">Log in</router-link></base-button>
     </div>
   </header>
 </template>
