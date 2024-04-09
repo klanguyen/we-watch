@@ -73,10 +73,17 @@ onMounted(() => {
   <!-- main content -->
   <section class="">
     <!-- cards -->
+    <div v-if="isLoggedIn" class="px-6 py-12 mb-3 bg-gray-950 text-gray-300">
+      <h1 class="text-[2em] font-semibold tracking-wide mb-2">Welcome back, {{ currentUser.username }}!</h1>
+      <p class="">Check out these movies!</p>
+    </div>
+    <div v-else class="px-6 py-12 mb-3 bg-gray-950 text-gray-300">
+      <h1 class="text-[2em] font-semibold tracking-wide mb-2">Your movie library</h1>
+      <p class="">Movies are better when we watch together!</p>
+    </div>
     <div class="px-6 py-3">
       <div class="flex items-center justify-between mb-3">
-        <h2 class="text-2xl font-semibold text-gray-950 tracking-wider hover:underline cursor-pointer">Popular</h2>
-        <h3 class="text-xs text-gray-950 uppercase tracking-wider hover:underline mb-3 cursor-pointer">See All</h3>
+        <h2 class="text-2xl font-semibold text-gray-950 tracking-wider">Popular</h2>
       </div>
       <div class="w-full flex flex-row flex-nowrap overflow-x-auto">
         <!-- card item -->
@@ -89,8 +96,7 @@ onMounted(() => {
 
     <div class="px-6 py-3">
       <div class="flex items-center justify-between mb-3">
-        <h2 class="text-2xl font-semibold text-gray-950 tracking-wider hover:underline cursor-pointer">Now Playing</h2>
-        <h3 class="text-xs text-gray-950 uppercase tracking-wider hover:underline mb-3 cursor-pointer">See All</h3>
+        <h2 class="text-2xl font-semibold text-gray-950 tracking-wider">Now Playing</h2>
       </div>
       <div class="w-full flex flex-row flex-nowrap overflow-x-auto">
         <!-- card item -->
@@ -103,8 +109,7 @@ onMounted(() => {
 
     <div class="px-6 py-3">
       <div class="flex items-center justify-between mb-3">
-        <h2 class="text-2xl font-semibold text-gray-950 tracking-wider hover:underline cursor-pointer">Top Rated</h2>
-        <h3 class="text-xs text-gray-950 uppercase tracking-wider hover:underline mb-3 cursor-pointer">See All</h3>
+        <h2 class="text-2xl font-semibold text-gray-950 tracking-wider">Top Rated</h2>
       </div>
       <div class="w-full flex flex-row flex-nowrap overflow-x-auto">
         <!-- card item -->
@@ -117,8 +122,7 @@ onMounted(() => {
 
     <div class="px-6 py-3">
       <div class="flex items-center justify-between mb-3">
-        <h2 class="text-2xl font-semibold text-gray-950 tracking-wider hover:underline cursor-pointer">Upcoming</h2>
-        <h3 class="text-xs text-gray-950 uppercase tracking-wider hover:underline mb-3 cursor-pointer">See All</h3>
+        <h2 class="text-2xl font-semibold text-gray-950 tracking-wider">Upcoming</h2>
       </div>
       <div class="w-full flex flex-row flex-nowrap overflow-x-auto">
         <!-- card item -->
@@ -129,14 +133,14 @@ onMounted(() => {
       </div>
     </div>
 
-    <div v-if="isLoggedIn" class="px-6 py-3">
+<!--    <div v-if="isLoggedIn" class="px-6 py-3">
       <div class="pl-2 mb-3">
         <h2 class="text-2xl font-semibold text-gray-950 tracking-wider hover:underline cursor-pointer">Made for {{ currentUser.username }}</h2>
         <h3 class="text-sm text-gray-950">Get better recommendations the more you watch.</h3>
       </div>
       <div class="w-full flex flex-wrap justify-between">
-        <!-- card item -->
-        <!-- TODO: adjust the amount of movies showing by size -->
+        &lt;!&ndash; card item &ndash;&gt;
+        &lt;!&ndash; TODO: adjust the amount of movies showing by size &ndash;&gt;
         <div class="w-48">
           <div class="bg-gray-300 w-full h-auto p-5 rounded-lg shadow-md">
             <img src="https://placehold.it/500x500" class="rounded-lg shadow mb-2">
@@ -159,7 +163,7 @@ onMounted(() => {
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
   </section>
 </template>
 
