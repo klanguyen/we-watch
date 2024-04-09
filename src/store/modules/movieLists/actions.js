@@ -68,13 +68,24 @@ export default {
 
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((userDoc) => {
-            //setDoc(doc(db, 'WeWatchUsers', userDoc.id, 'WatchedList', payload.id), payload); <- can't use this bc the collection hasn't been created
-            // add new movie id to watched array
-            updateDoc(doc(db, 'WeWatchUsers', userDoc.id), {
-                watched: arrayUnion(payload.id)
-            })
-            const newMovieRef = doc(collection(db, 'WeWatchUsers', userDoc.id, 'WatchedList'));
-            setDoc(newMovieRef, payload);
+            // check if movie is in the list already
+            const q2 = query(collection(db, 'WeWatchUsers', userDoc.id, 'WatchedList'), where('id', '==' ,payload.id));
+
+            getDocs(q2).then(q2Snapshot => {
+                if(!q2Snapshot.empty) {
+                    alert('This movie is already in watched list');
+                }else {
+                    // add new movie id to watched array
+                    updateDoc(doc(db, 'WeWatchUsers', userDoc.id), {
+                        watched: arrayUnion(payload.id)
+                    })
+                    const newMovieRef = doc(collection(db, 'WeWatchUsers', userDoc.id, 'WatchedList'));
+                    setDoc(newMovieRef, payload);
+                }
+            }).catch(err => {
+                console.log('Failed to check watched status', err);
+            });
+
         });
     },
 
@@ -84,12 +95,23 @@ export default {
 
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((userDoc) => {
-            // add new movie id to gotta watch array
-            updateDoc(doc(db, 'WeWatchUsers', userDoc.id), {
-                gottaWatch: arrayUnion(payload.id)
-            })
-            const newMovieRef = doc(collection(db, 'WeWatchUsers', userDoc.id, 'GottaWatchList'));
-            setDoc(newMovieRef, payload);
+            // check if movie is in the list already
+            const q2 = query(collection(db, 'WeWatchUsers', userDoc.id, 'GottaWatchList'), where('id', '==' ,payload.id));
+
+            getDocs(q2).then(q2Snapshot => {
+                if(!q2Snapshot.empty) {
+                    alert('This movie is already in gotta watch list');
+                }else {
+                    // add new movie id to gotta watch array
+                    updateDoc(doc(db, 'WeWatchUsers', userDoc.id), {
+                        gottaWatch: arrayUnion(payload.id)
+                    })
+                    const newMovieRef = doc(collection(db, 'WeWatchUsers', userDoc.id, 'GottaWatchList'));
+                    setDoc(newMovieRef, payload);
+                }
+            }).catch(err => {
+                console.log('Failed to check watched status', err);
+            });
         });
     },
 

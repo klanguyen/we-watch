@@ -107,10 +107,6 @@ onMounted(() => {
   store.dispatch('movieLists/getGottaWatchStatus', parseInt(props.movieId));
 })
 
-watch(route.path, () => {
-  location.reload();
-})
-
 getDirector();
 </script>
 
