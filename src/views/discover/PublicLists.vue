@@ -78,7 +78,7 @@ loadLists();
       <base-spinner v-if="isLoading"></base-spinner>
       <div v-else-if="hasLists && !isLoading">
         <h2 class="text-2xl font-semibold text-gray-950 tracking-wide mb-4">Recently created</h2>
-        <ul class="grid grid-cols-2 gap-5">
+        <ul class="inline-block xl:grid xl:grid-cols-2 gap-5">
           <list-item
               v-for="list in publicLists"
               :key="list.id"

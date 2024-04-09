@@ -52,7 +52,7 @@ loadLists();
     </section>
     <section class="px-6 py-3">
       <base-spinner v-if="isLoading"></base-spinner>
-      <ul v-else-if="hasLists && !isLoading" class="grid grid-cols-2 gap-5">
+      <ul v-else-if="hasLists && !isLoading" class="inline-block xl:grid xl:grid-cols-2 gap-5">
         <list-item
           v-for="list in createdLists"
           :key="list.id"
