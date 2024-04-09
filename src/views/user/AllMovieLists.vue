@@ -8,7 +8,9 @@ const store = useStore();
 const isLoading = ref(false);
 const error = ref(null);
 
-const createdLists = ref([]);
+const createdLists = computed(() => {
+  return store.getters["movieLists/movieLists"];
+});
 const hasLists = computed(() => {
   return store.getters["movieLists/hasLists"];
 })
@@ -17,7 +19,7 @@ async function loadLists() {
   isLoading.value = true;
   try {
     await store.dispatch('movieLists/fetchLists');
-    createdLists.value = store.getters["movieLists/movieLists"];
+    //createdLists.value = store.getters["movieLists/movieLists"];
   } catch(e) {
     error.value = e.message || 'Something failed';
   }

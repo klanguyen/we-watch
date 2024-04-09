@@ -337,6 +337,7 @@ export default {
 
     async fetchLists(context) {
         context.commit('setLists', []);
+        context.commit('setTheListMovies', []);
         const listsColRef = collection(db, 'MovieLists');
         const q = query(
             listsColRef,
@@ -368,6 +369,7 @@ export default {
 
     async fetchPublicLists(context) {
         context.commit('setLists', []);
+        context.commit('setTheListMovies', []);
         const listsColRef = collection(db, 'MovieLists');
         const q = query(
             listsColRef,
