@@ -52,7 +52,7 @@ onMounted(() => {
         <h2 class="text-2xl font-semibold text-gray-950 tracking-wider hover:underline cursor-pointer">Trending people</h2>
       </div>
       <div class="w-full flex flex-row flex-nowrap overflow-x-auto">
-        <ul class="grid grid-cols-2">
+        <ul class="block lg:grid lg:grid-cols-2">
           <li v-for="(item, key) in trendingPeople" class="flex flex-row mr-3 mb-7 items-center">
             <div class="flex mr-3">
               <div class="w-[9rem] h-[9rem] overflow-hidden rounded-full">
@@ -62,7 +62,7 @@ onMounted(() => {
             </div>
             <span class="flex flex-col tracking-wide">
               <span class="font-semibold text-lg text-gray-950">{{ item.info.original_name }}</span>
-              <span class="font-light">{{ item.movies.join(', ') }}</span>
+              <span class="font-light text-sm">{{ item.movies.join(', ') }}</span>
             </span>
           </li>
         </ul>
