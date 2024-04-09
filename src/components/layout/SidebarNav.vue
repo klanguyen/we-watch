@@ -55,7 +55,7 @@ function toPage(path) {
 
 <template>
   <!-- side nav -->
-  <aside class="w-60 bg-gray-300 h-full flex-none overflow-y-scroll">
+  <aside class="w-60 bg-gray-100 border-r border-gray-400 h-full flex-none overflow-y-scroll">
     <div class="p-6">
       <h1 class="h-10 text-gray-950 logo text-2xl">
         <router-link to="/">
@@ -69,7 +69,7 @@ function toPage(path) {
       <button
           v-for="page in generalPages"
           @click="toPage(page.path)"
-          :class="`w-full focus:outline-none hover:text-gray-950 hover:bg-gray-50 rounded px-3 py-2 flex items-center justify-start text-gray-500`"
+          :class="`w-full focus:outline-none hover:text-gray-950 hover:bg-gray-300 rounded px-4 py-2 flex items-center justify-start text-gray-700`"
       >
         <font-awesome-icon
             :icon="['fas', page.icon]"
@@ -80,7 +80,7 @@ function toPage(path) {
       <button
           v-for="page in memberPages"
           @click="toPage(page.path)"
-          :class="`w-full focus:outline-none hover:text-gray-950 hover:bg-gray-50 rounded px-3 py-2 flex items-center justify-start text-gray-500`"
+          :class="`w-full focus:outline-none hover:text-gray-950 hover:bg-gray-300 rounded px-4 py-2 flex items-center justify-start text-gray-700`"
           v-if="isLoggedIn"
       >
         <font-awesome-icon
@@ -91,10 +91,10 @@ function toPage(path) {
       </button>
     </div>
     <div class="mx-2 mb-2">
-      <h2 class="px-3 py-3 text-gray-500 tracking-widest uppercase border-t-2 border-gray-400">Discover</h2>
+      <h2 class="px-4 py-3 text-gray-700 tracking-widest uppercase border-t-[1px] border-gray-400">Discover</h2>
       <button
           v-for="page in discoverPages"
-          class="w-full focus:outline-none hover:text-gray-950 hover:bg-gray-50 rounded px-3 py-2 flex items-center justify-start text-gray-500"
+          class="w-full focus:outline-none hover:text-gray-950 hover:bg-gray-300 rounded px-4 py-2 flex items-center justify-start text-gray-700"
           @click="toPage(page.path)">
         <font-awesome-icon
             class="mr-3"
@@ -103,10 +103,10 @@ function toPage(path) {
       </button>
     </div>
     <div class="mx-2 mb-2">
-      <h2 class="px-3 py-3 text-gray-500 tracking-widest uppercase border-t-2 border-gray-400">Movie Lists</h2>
+      <h2 class="px-4 py-3 text-gray-700 tracking-widest uppercase border-t-[1px] border-gray-400">Movie Lists</h2>
       <div v-if="isLoggedIn">
         <button
-            class="w-full focus:outline-none hover:text-gray-950 hover:bg-gray-50 rounded px-3 py-2 flex items-center justify-start text-gray-500"
+            class="w-full focus:outline-none hover:text-gray-950 hover:bg-gray-300 rounded px-4 py-2 flex items-center justify-start text-gray-700"
             @click="toPage('/new-list')">
           <font-awesome-icon
               class="mr-3"
@@ -114,7 +114,7 @@ function toPage(path) {
           <span class="">Create List</span>
         </button>
         <button
-            class="w-full focus:outline-none hover:text-gray-950 hover:bg-gray-50 rounded px-3 py-2 flex items-center justify-start text-gray-500"
+            class="w-full focus:outline-none hover:text-gray-950 hover:bg-gray-300 rounded px-4 py-2 flex items-center justify-start text-gray-700"
             @click="toPage('/user/watched-list/')">
           <font-awesome-icon
               class="mr-3"
@@ -122,7 +122,7 @@ function toPage(path) {
           <span class="">Watched</span>
         </button>
         <button
-            class="w-full focus:outline-none hover:text-gray-950 hover:bg-gray-50 rounded px-3 py-2 flex items-center justify-start text-gray-500"
+            class="w-full focus:outline-none hover:text-gray-950 hover:bg-gray-300 rounded px-4 py-2 flex items-center justify-start text-gray-700"
             @click="toPage('/user/gotta-watch-list/')">
           <font-awesome-icon
               class="mr-3"
@@ -131,8 +131,8 @@ function toPage(path) {
         </button>
       </div>
       <div v-else class="mx-2 mb-2 text-gray-500">
-        <p class="text-sm mb-2">Log in to track movies, create lists, and more.</p>
-        <button class="bg-inherit text-gray-950 rounded-full py-2 px-5 flex justify-center hover:scale-105 border border-gray-950 text-sm" @click="toPage('/login')">Log in</button>
+        <p class="text-sm pl-2 mb-2">Log in to track movies, create lists, and more.</p>
+        <button class="bg-inherit text-gray-950 rounded-full py-2 px-5 ml-2 flex justify-center hover:scale-105 border border-gray-950 text-sm" @click="toPage('/login')">Log in</button>
       </div>
     </div>
   </aside>
