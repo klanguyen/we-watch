@@ -115,13 +115,13 @@ function toPage(path) {
           <font-awesome-icon
               class="mr-3 text-gray-950"
               :icon="['fas', 'eye']"/>
-          <span class="text-sm text-gray-950">Watched List</span>
+          <span class="text-sm text-gray-950">Watched</span>
         </button>
         <button class="flex items-center justify-start opacity-45 hover:opacity-100 py-1" @click="toPage('/user/gotta-watch-list/')">
           <font-awesome-icon
               class="mr-3 text-gray-950"
               :icon="['fas', 'bookmark']" />
-          <span class="text-sm text-gray-950">Gotta Watch List</span>
+          <span class="text-sm text-gray-950">Gotta Watch</span>
         </button>
       </div>
       <div v-else class="text-gray-500">
