@@ -23,10 +23,10 @@ const pageValues = ref({
 })
 
 const submitButtonCaption = computed(() => {
-  return formValues.value.mode === 'login' ? 'Login' : 'Signup'
+  return formValues.value.mode === 'login' ? 'Log in' : 'Sign up'
 })
 const switchModeButtonCaption = computed(() => {
-  return formValues.value.mode === 'login' ? 'Signup instead' : 'Login instead';
+  return formValues.value.mode === 'login' ? 'Sign up' : 'Log in';
 })
 
 function checkRoute() {
@@ -92,64 +92,78 @@ checkRoute();
 </script>
 
 <template>
-  <div>
+  <article class="flex flex-col items-center px-6 py-8 mx-auto md:h-screen lg:py-0">
     <base-dialog :show="!!pageValues.error" title="Ah...error occurred" @close="handleError">
       {{ pageValues.error }}
     </base-dialog>
     <base-dialog :show="pageValues.isLoading" title="Authenticating..." fixed>
       <base-spinner></base-spinner>
     </base-dialog>
-    <base-card>
-      <form @submit.prevent="submitForm">
-        <div class="form-control" v-if="formValues.mode === 'signup'">
-          <label for="name">Username</label>
-          <input type="text" id="name" v-model.trim="userValues.username" />
-        </div>
-        <div class="form-control">
-          <label for="email">Email</label>
-          <input type="email" id="email" v-model.trim="userValues.email" />
-        </div>
-        <div class="form-control">
-          <label for="password">Password</label>
-          <input type="password" id="password" v-model.trim="userValues.password" />
-        </div>
-        <p v-if="!formValues.formIsValid">Please enter a valid email and password (must be 6 characters long)</p>
-        <base-button>{{ submitButtonCaption }}</base-button>
-        <base-button mode="outline" @click="switchAuthMode">{{ switchModeButtonCaption }}</base-button>
-      </form>
-    </base-card>
-  </div>
+    <div class="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
+      <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+        <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
+          {{ formValues.mode === 'signup' ? 'Create an account' : 'Log in to your account' }}
+        </h1>
+        <form
+            @submit.prevent="submitForm"
+            class="space-y-4 md:space-y-6"
+        >
+          <div v-if="formValues.mode === 'signup'">
+            <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Username</label>
+            <input
+                type="text"
+                id="name"
+                v-model.trim="userValues.username"
+                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-gray-600 focus:border-gray-600 block w-full p-2.5"
+                placeholder="e.g. MovieLover"
+            />
+          </div>
+          <div>
+            <label
+                for="email"
+                class="block mb-2 text-sm font-medium text-gray-900"
+            >
+              Email
+            </label>
+            <input
+                type="email"
+                id="email"
+                v-model.trim="userValues.email"
+                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-gray-600 focus:border-gray-600 block w-full p-2.5"
+                placeholder="name@company.com"
+            />
+          </div>
+          <div>
+            <label
+                for="password"
+                class="block mb-2 text-sm font-medium text-gray-900"
+            >
+              Password
+            </label>
+            <input
+                type="password"
+                id="password"
+                v-model.trim="userValues.password"
+                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-gray-600 focus:border-gray-600 block w-full p-2.5"
+                placeholder="••••••••"
+            />
+          </div>
+          <p v-if="!formValues.formIsValid">Please enter a valid email and password (must be 6 characters long)</p>
+          <button
+              type="submit"
+              class="w-full text-gray-50 bg-zinc-800 hover:bg-zinc-950 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-full text-sm px-5 py-2.5 text-center"
+          >{{ submitButtonCaption }}</button>
+          <p class="text-sm font-light text-gray-500">
+            {{ formValues.mode === 'login' ? 'Don’t have an account yet?' : 'Already have an account?' }}
+            <a @click="switchAuthMode" class="font-medium text-gray-800 hover:underline cursor-pointer">
+              {{ switchModeButtonCaption }}
+            </a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </article>
 </template>
 
 <style scoped>
-form {
-  margin: 1rem;
-  padding: 1rem;
-}
-
-.form-control {
-  margin: 0.5rem 0;
-}
-
-label {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  display: block;
-}
-
-input,
-textarea {
-  display: block;
-  width: 100%;
-  font: inherit;
-  border: 1px solid #ccc;
-  padding: 0.15rem;
-}
-
-input:focus,
-textarea:focus {
-  border-color: #3d008d;
-  background-color: #faf6ff;
-  outline: none;
-}
 </style>
