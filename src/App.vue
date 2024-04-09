@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-black h-screen">
+  <div class="bg-gray-100 h-screen">
     <div class="flex h-full">
       <side-bar-nav></side-bar-nav>
       <div class="w-full h-full bg-gray-100 relative overflow-y-scroll">
