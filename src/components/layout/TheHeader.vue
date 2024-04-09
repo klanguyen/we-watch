@@ -85,11 +85,10 @@ function handleError() {
         <span class="sr-only">Toggle sidebar</span>
       </button>
       <h1 class="pt-2 h-10 text-gray-950 logo text-2xl md:hidden">
-        <router-link to="/">
-          <font-awesome-icon
-              :icon="['fas', 'glasses']"
-              class="mr-2"
-          />WeWatch</router-link>
+        <router-link to="/" class="flex items-center">
+          <img class="w-10 h-10 mr-2" src="/src/assets/img/wewatch-logo.png" alt="WeWatch logo" />
+          WeWatch
+        </router-link>
       </h1>
       <div class="hidden md:block">
         <button class="rounded-full bg-gray-400 w-8 h-8 text-gray-950 opacity-45 hover:opacity-100 mr-3" @click="router.back()">
