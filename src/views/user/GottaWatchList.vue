@@ -1,11 +1,11 @@
 <script setup>
 import {useStore} from "vuex";
-import {computed, onBeforeMount, onMounted} from "vue";
+import {computed, onBeforeMount, onMounted, ref} from "vue";
 import MovieItem from "@/components/movie/MovieItem.vue";
 
 const store = useStore();
 
-const gottaWatchList = store.getters["movieLists/gottaWatchList"];
+const gottaWatchList = ref([]);
 const hasMovies = computed(() => {
   return gottaWatchList.length !== 0;
 })
@@ -16,6 +16,7 @@ onBeforeMount(() => {
 
 onMounted(() => {
   store.dispatch('movieLists/fetchGottaWatchList');
+  gottaWatchList.value = store.getters["movieLists/gottaWatchList"];
 })
 </script>
 

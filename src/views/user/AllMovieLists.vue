@@ -1,6 +1,6 @@
 <script setup>
 import ListItem from '@/components/movie-lists/ListItem.vue'
-import {ref, computed} from "vue";
+import {ref, computed, onMounted} from "vue";
 import {useStore} from "vuex";
 import BaseButton from "@/components/ui/BaseButton.vue";
 
@@ -8,9 +8,7 @@ const store = useStore();
 const isLoading = ref(false);
 const error = ref(null);
 
-const createdLists = computed(() => {
-  return store.getters["movieLists/movieLists"];
-})
+const createdLists = ref([]);
 const hasLists = computed(() => {
   return store.getters["movieLists/hasLists"];
 })
@@ -19,6 +17,7 @@ async function loadLists() {
   isLoading.value = true;
   try {
     await store.dispatch('movieLists/fetchLists');
+    createdLists.value = store.getters["movieLists/movieLists"];
   } catch(e) {
     error.value = e.message || 'Something failed';
   }

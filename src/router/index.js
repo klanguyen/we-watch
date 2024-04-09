@@ -3,7 +3,6 @@ import DashBoard from '../views/DashBoard.vue'
 import Home from '../views/Home.vue'
 import CreateList from "@/views/list/CreateList.vue";
 import UserAuth from "@/views/auth/UserAuth.vue";
-import store from '../store/index.js';
 import AllMovieLists from "@/views/user/AllMovieLists.vue";
 import SearchResults from "@/views/SearchResults.vue";
 import MovieDetails from "@/views/movie/MovieDetails.vue";
@@ -123,9 +122,9 @@ const router = createRouter({
 });
 
 router.beforeEach(function(to, _, next){
-  if(to.meta.requiresAuth && !store.getters.isAuthenticated) {
+  if(to.meta.requiresAuth && (localStorage.getItem('userId') === null)) {
     next('/login');
-  } else if (to.meta.requiresUnauth && store.getters.isAuthenticated) {
+  } else if (to.meta.requiresUnauth && !(localStorage.getItem('userId') === null)) {
     next('/');
   } else {
     next();
