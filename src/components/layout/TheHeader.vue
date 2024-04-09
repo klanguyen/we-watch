@@ -54,7 +54,7 @@ function handleError() {
           data-drawer-target="wewatch-sidebar"
           data-drawer-toggle="wewatch-sidebar"
           aria-controls="wewatch-sidebar"
-          class="p-2 mr-2 mt-2 text-gray-600 rounded-lg cursor-pointer sm:hidden hover:text-gray-900 hover:bg-gray-300 focus:bg-gray-100 focus:ring-2 focus:ring-gray-100"
+          class="p-2 mr-2 mt-2 text-gray-600 rounded-lg cursor-pointer md:hidden hover:text-gray-900 hover:bg-gray-300 focus:bg-gray-100 focus:ring-2 focus:ring-gray-100"
       >
         <svg
             aria-hidden="true"
@@ -84,14 +84,14 @@ function handleError() {
         </svg>
         <span class="sr-only">Toggle sidebar</span>
       </button>
-      <h1 class="pt-2 h-10 text-gray-950 logo text-2xl sm:hidden">
+      <h1 class="pt-2 h-10 text-gray-950 logo text-2xl md:hidden">
         <router-link to="/">
           <font-awesome-icon
               :icon="['fas', 'glasses']"
               class="mr-2"
           />WeWatch</router-link>
       </h1>
-      <div class="hidden sm:block">
+      <div class="hidden md:block">
         <button class="rounded-full bg-gray-400 w-8 h-8 text-gray-950 opacity-45 hover:opacity-100 mr-3" @click="router.back()">
           <font-awesome-icon
               :icon="['fas', 'chevron-left']"/>
@@ -121,7 +121,7 @@ function handleError() {
       </div>
     </div>
     <div v-else class="relative flex items-center">
-      <button class="py-2 mr-5 text-gray-500 hover:text-gray-950 hover:scale-105 hidden sm:block"><router-link to="/signup">Sign up</router-link></button>
+      <button class="py-2 mr-5 text-gray-500 hover:text-gray-950 hover:scale-105 hidden md:block"><router-link to="/signup">Sign up</router-link></button>
       <base-button><router-link to="/login">Log in</router-link></base-button>
     </div>
   </header>

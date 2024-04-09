@@ -55,7 +55,7 @@ function toPage(path) {
 
 <template>
   <!-- side nav -->
-  <aside id="wewatch-sidebar" class="fixed top-0 left-0 z-40 sm:relative w-1/3 max-w-[18rem] min-w-[15rem] bg-gray-100 border-r border-gray-400 h-screen overflow-y-scroll transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
+  <aside id="wewatch-sidebar" class="fixed top-0 left-0 z-40 md:relative w-1/3 max-w-[18rem] min-w-[15rem] bg-gray-100 border-r border-gray-400 h-screen overflow-y-scroll transition-transform -translate-x-full md:translate-x-0" aria-label="Sidebar">
     <div class="p-6 dark:bg-gray-800 dark:border-gray-700">
       <h1 class="h-10 text-gray-950 logo text-2xl">
         <router-link to="/">
