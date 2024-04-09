@@ -23,7 +23,7 @@ export default {
             let baseImgUrl = 'https://image.tmdb.org/t/p/';
             return baseImgUrl.concat('w780', posterPath);
         } else {
-            return 'https://placehold.it/500x500';
+            return '/src/assets/img/poster-placeholder.png';
         }
     },
     getBackdropImageUrl(backdropPath) {
