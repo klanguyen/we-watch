@@ -84,9 +84,9 @@ function handleError() {
         </svg>
         <span class="sr-only">Toggle sidebar</span>
       </button>
-      <h1 class="pt-2 h-10 text-gray-950 logo text-2xl md:hidden">
+      <h1 class="pt-3 h-10 text-gray-950 logo text-base md:text-2xl md:hidden">
         <router-link to="/" class="flex items-center">
-          <img class="w-10 h-10 mr-2" src="/src/assets/img/wewatch-logo.png" alt="WeWatch logo" />
+          <img class="w-6 h-6 sm:w-10 sm:h-10 mr-2" src="/src/assets/img/wewatch-logo.png" alt="WeWatch logo" />
           WeWatch
         </router-link>
       </h1>
@@ -102,7 +102,7 @@ function handleError() {
       </div>
     </div>
     <div v-if="isLoggedIn" class="relative flex">
-      <button @click="showDropdown = !showDropdown" class="bg-gray-300 rounded-full py-1 px-2 flex items-center">
+      <button @click="showDropdown = !showDropdown" class="bg-gray-300 rounded-full mt-2 py-1 px-2 flex items-center">
         <img :src="currentUser.profileImageUrl ?? 'https://placehold.it/200x200'" class="rounded-full h-8 w-8 mr-3" />
         <span class="text-gray-950 font-semibold text-sm mr-4">{{ currentUser.username }}</span>
         <font-awesome-icon
