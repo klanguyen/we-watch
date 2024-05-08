@@ -164,6 +164,16 @@ onMounted(() => {
         </div>
       </div>
     </div>-->
+
+<!--    <div class="px-6 py-3">
+      <swiper-container class="topRatedSwiper" pagination-type="progressbar" navigation="true" slides-per-view="auto" space-between="10" free-mode="true">
+        <swiper-slide v-for="(item, index) in topRatedMovies"
+                      :key="item.id">
+          <movie-item
+            :movie="item"></movie-item>
+        </swiper-slide>
+      </swiper-container>
+    </div>-->
   </section>
 </template>
 

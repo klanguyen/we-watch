@@ -57,15 +57,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="group/item w-60 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-5 mr-5 cursor-pointer min-w-60">
+  <div class="group/item w-48 md:w-60 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-5 mr-5 cursor-pointer min-w-48 md:min-w-60">
     <a @click="toDetailsPage(props.movie.id)" class="relative">
       <img class="rounded-t-lg hover:brightness-50" :src="posterUrl" :alt="props.movie.title + ' poster'" />
     </a>
-    <div class="p-5">
+    <div class="p-3 md:p-5">
       <a @click="toDetailsPage(props.movie.id)">
-        <h5 class="mb-2 text-lg font-bold tracking-wide text-gray-900 dark:text-white">{{ props.movie.title }}</h5>
+        <h5 class="mb-2 text-md sm:text-lg font-bold tracking-wide text-gray-900 dark:text-white">{{ props.movie.title }}</h5>
       </a>
-      <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ genres.length > 0 ? genres.join(', ') : 'No genre specified' }}</p>
+      <p class="mb-3 font-normal text-xs sm:text-base text-gray-700 dark:text-gray-400">{{ genres.length > 0 ? genres.join(', ') : 'No genre specified' }}</p>
       <div class="flex">
         <fwb-badge size="sm" type="yellow">
           <template #icon>

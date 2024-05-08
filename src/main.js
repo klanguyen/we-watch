@@ -5,6 +5,9 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store/index.js'
+import {register} from 'swiper/element/bundle';
+
+register();
 
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'

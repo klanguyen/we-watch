@@ -113,11 +113,11 @@ getDirector();
 <template>
   <article class="bg-gray-950">
     <section
-        class="px-6 py-10 bg-cover bg-center bg-no-repeat flex md:flex-row sm:flex-col"
+        class="px-6 py-10 bg-cover bg-center bg-no-repeat flex lg:flex-row flex-col"
         :style="'background-image: linear-gradient(rgba(3,7,18,0.75),\n'+'rgba(3,7,18,1)), url(\'' + backdropUrl + '\'); height: auto;'">
       <img class="max-w-[20rem] md:w-1/3 h-full rounded-lg mr-6" :src="posterUrl" :alt="theMovie.title + ' poster'" />
-      <div class="movie-meta text-gray-300">
-        <h1 class="text-[2.5em] text-gray-50 font-bold tracking-wide mb-2">{{ theMovie.title }} <span class="font-thin">({{ parseInt(theMovie.release_date) }})</span></h1>
+      <div class="mt-4 lg:mt-0 movie-meta text-gray-300">
+        <h1 class="text-[2em] lg:text-[2.5em] text-gray-50 font-bold tracking-wide mb-2">{{ theMovie.title }} <span class="font-thin">({{ parseInt(theMovie.release_date) }})</span></h1>
         <p class="mb-2">Directed by <span class="font-semibold">{{ director }}</span></p>
         <p class="mb-3 tracking-wide">
           <span class="mr-2">{{ formatReleaseDate(theMovie.release_date) }}</span>

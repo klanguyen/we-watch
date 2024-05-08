@@ -13,3 +13,11 @@
 body {
   font-family: 'Poppins', sans-serif;
 }
+
+swiper-slide {
+  width: auto;
+}
+
+.swiper-horizontal>.swiper-pagination-progressbar, .swiper-pagination-progressbar.swiper-pagination-horizontal, .swiper-pagination-progressbar.swiper-pagination-vertical.swiper-pagination-progressbar-opposite, .swiper-vertical>.swiper-pagination-progressbar.swiper-pagination-progressbar-opposite{
+  bottom: 0 !important;
+}
